@@ -1,4 +1,6 @@
-class CogCmd::Ecs::Container < Cog::AggregateCommand
+require_relative 'aggregate_command_with_usage'
+
+class CogCmd::Ecs::Container < CogCmd::Ecs::AggregateCommandWithUsage
 
   SUBCOMMANDS = %w(list show define)
 
