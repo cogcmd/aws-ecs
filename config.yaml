@@ -2,7 +2,7 @@
 cog_bundle_version: 3
 name: ecs
 description: "AWS EC2 Container Service"
-version: "0.0.1"
+version: "0.0.6"
 commands:
   container:
     executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
@@ -25,12 +25,12 @@ commands:
         type: list
         required: false
       port-mapping:
-        type: string
+        type: list
         required: false
       essential:
         type: bool
         required: false
-      entrypoint:
+      entry-point:
         type: string
         required: false
       command:
@@ -60,26 +60,26 @@ commands:
       privileged:
         type: bool
         required: false
-      read-only-root-filesystem:
+      readonly-root-filesystem:
         type: bool
         required: false
       dns-server:
-        type: string
+        type: list
         required: false
       dns-search-domain:
-        type: string
+        type: list
         required: false
       extra-host:
-        type: string
+        type: list
         required: false
       docker-security-option:
-        type: string
+        type: list
         required: false
       docker-label:
-        type: string
+        type: list
         required: false
       ulimit:
-        type: string
+        type: list
         required: false
       log-configuration:
         type: string
