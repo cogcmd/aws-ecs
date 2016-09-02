@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-# Make sure we're in the top-level directory for the command
-# since so many paths are relative.
-Dir.chdir(File.dirname(__FILE__))
+# Add the lib directory to the load path
+libdir = File.join(File.dirname(__FILE__), 'lib', 'cog_cmd')
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'bundler/setup'
 require 'cog'

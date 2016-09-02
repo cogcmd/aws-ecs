@@ -1,6 +1,6 @@
 require 'json'
-require_relative '../helpers'
-require_relative 'helpers'
+require 'ecs/helpers'
+require 'ecs/container/helpers'
 
 class CogCmd::Ecs::Container::Define < Cog::SubCommand
 

@@ -1,4 +1,4 @@
-require_relative '../helpers'
+require 'ecs/helpers'
 
 class CogCmd::Ecs::Container::List < Cog::SubCommand
 

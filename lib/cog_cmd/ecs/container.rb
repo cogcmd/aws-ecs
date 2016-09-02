@@ -1,4 +1,4 @@
-require_relative 'aggregate_command_with_usage'
+require 'ecs/aggregate_command_with_usage'
 
 class CogCmd::Ecs::Container < CogCmd::Ecs::AggregateCommandWithUsage
 

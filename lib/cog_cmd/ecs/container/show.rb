@@ -1,6 +1,6 @@
 require 'json'
-require_relative '../exceptions'
-require_relative '../helpers'
+require 'ecs/exceptions'
+require 'ecs/helpers'
 
 class CogCmd::Ecs::Container::Show < Cog::SubCommand
 
