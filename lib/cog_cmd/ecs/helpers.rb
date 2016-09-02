@@ -22,6 +22,10 @@ module CogCmd::Ecs::Helpers
     end
   end
 
+  def error(msg)
+    "ecs: error: #{msg}"
+  end
+
   def strip_prefix(str)
     str.sub(container_definition_root[:prefix], "")
   end
