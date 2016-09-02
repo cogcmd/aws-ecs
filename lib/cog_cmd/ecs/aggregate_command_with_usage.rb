@@ -12,6 +12,8 @@ class CogCmd::Ecs::AggregateCommandWithUsage < Cog::AggregateCommand
     else
       super
     end
+  rescue CogCmd::Ecs::ArgumentError => msg
+    response['body'] = usage(subcommand.class::USAGE, error(msg))
   end
 
   # We override require_subcommand! to insert a check for the help flag and
