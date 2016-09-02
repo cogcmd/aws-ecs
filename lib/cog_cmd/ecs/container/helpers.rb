@@ -33,7 +33,7 @@ module CogCmd::Ecs::Container::Helpers
 
   def type(key)
     ints = %w(cpu memory memory_reservation)
-    strings = %w(hostname user working_directory)
+    strings = %w(hostname user working_directory image)
     bools = %(disable_networking privileged essential readonly_root_filesystem)
     lists = %w(link dns_server dns_search_domain docker_security_option)
     specials = %w(entry_point command port_mapping env mount_point volume_from extra_host docker_label ulimit log_configuration)
