@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'ecs/exceptions'
 
 # If an AWS STS ROLE is defined, configure the AWS SDK to assume it
 if ENV['AWS_STS_ROLE_ARN']
@@ -24,6 +25,13 @@ module CogCmd::Ecs::Helpers
 
   def error(msg)
     "ecs: error: #{msg}"
+  end
+
+  # Takes param in the form of '[ param_name, param_value]'. Returns nil if
+  # param_value is nil.
+  def param_or_nil(param)
+    return nil if param[1] == nil
+    param
   end
 
   def strip_prefix(str)
