@@ -12,8 +12,8 @@ class CogCmd::Ecs::Task::List < Cog::SubCommand
   Options:
     --family, -f <family name>   The name of the family with which to filter the results
     --limit, -l <num>            Limit the number of results returned
-    --status <ACTIVE | INACTIVE> Filter by the desired status of the task
-    --sort <ASC | DESC>          Sort order
+    --status <ACTIVE | INACTIVE> Filter by the desired status of the task. Defaults to ACTIVE
+    --sort <ASC | DESC>          Sort order. Defaults to ASC
 
   END
 
