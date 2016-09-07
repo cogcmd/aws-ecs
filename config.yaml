@@ -1,6 +1,7 @@
 ---
 cog_bundle_version: 4
 name: ecs
+<<<<<<< 9c7d1da4960c4e3955ea975dff7a502cff96c74c
 description: AWS EC2 Container Service
 version: 0.0.18
 commands:
