@@ -16,6 +16,10 @@ class CogCmd::Ecs::Task::Deregister < Cog::SubCommand
       raise CogCmd::Ecs::ArgumentError, "You must specify a family and revision 'family:revision'"
     end
 
+    unless task.split(':')[1]
+      raise CogCmd::Ecs::ArgumentError, "You must specify a family and revision 'family:revision'"
+    end
+
     client = Aws::ECS::Client.new()
 
     client.deregister_task_definition(task_definition: task).to_h
