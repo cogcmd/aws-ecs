@@ -1,17 +1,97 @@
 ---
-cog_bundle_version: 3
+cog_bundle_version: 4
 name: ecs
 description: "AWS EC2 Container Service"
-version: "0.0.6"
+version: "0.0.2"
 commands:
-  container:
+  container-define:
     executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
-    description: "Manage ECS Container Definitions"
+    description: "Creates a new container definition."
+    arguments: "<name> <image>"
     options:
-      help:
+      cpu:
+        type: int
+        required: false
+      memory:
+        type: int
+        required: false
+      memory-reservation:
+        type: int
+        required: false
+      link:
+        type: list
+        required: false
+      port-mapping:
+        type: list
+        required: false
+      essential:
         type: bool
         required: false
-        short_flag: h
+      entry-point:
+        type: string
+        required: false
+      command:
+        type: string
+        required: false
+      env:
+        type: list
+        required: false
+      mount-point:
+        type: list
+        required: false
+      volume-from:
+        type: list
+        required: false
+      hostname:
+        type: string
+        required: false
+      user:
+        type: string
+        required: false
+      working-directory:
+        type: string
+        required: false
+      disable-networking:
+        type: bool
+        required: false
+      privileged:
+        type: bool
+        required: false
+      readonly-root-filesystem:
+        type: bool
+        required: false
+      dns-server:
+        type: list
+        required: false
+      dns-search-domain:
+        type: list
+        required: false
+      extra-host:
+        type: list
+        required: false
+      docker-security-option:
+        type: list
+        required: false
+      docker-label:
+        type: list
+        required: false
+      ulimit:
+        type: list
+        required: false
+      log-configuration:
+        type: string
+        required: false
+    rules:
+      - "must have ecs:container"
+  container-update:
+    executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
+    description: "Creates a new container definition."
+    arguments: "<name>"
+    options:
+      image:
+        type: string
+        required: false
+        short_flag: i
       cpu:
         type: int
         required: false

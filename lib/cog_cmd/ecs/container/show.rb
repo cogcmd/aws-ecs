@@ -1,29 +1,23 @@
 require 'json'
-require 'ecs/exceptions'
 require 'ecs/helpers'
 
-class CogCmd::Ecs::Container::Show < Cog::SubCommand
+module CogCmd::Ecs::Container
+  class Show < Cog::Command
 
-  include CogCmd::Ecs::Helpers
+    include CogCmd::Ecs::Helpers
 
-  USAGE = <<~END
-  Usage: ecs:container show <definition name>
+    def run_command
+      unless def_name = request.args[0]
+        raise Cog::Error, "You must specify a definition name."
+      end
 
-  Shows the json body of a specific container definition.
-  END
+      client = Aws::S3::Client.new()
 
-  def run_command
-    unless def_name = request.args[0]
-      msg = "You must specify a definition name."
-      raise CogCmd::Ecs::ArgumentError, msg
+      key = "#{container_definition_root[:prefix]}#{def_name}.json"
+      resp = client.get_object(bucket: container_definition_root[:bucket], key: key)
+
+      response.content = JSON.parse(resp.body.read)
     end
 
-    client = Aws::S3::Client.new()
-
-    key = "#{container_definition_root[:prefix]}#{def_name}.json"
-    resp = client.get_object(bucket: container_definition_root[:bucket], key: key)
-
-    JSON.parse(resp.body.read)
   end
-
 end

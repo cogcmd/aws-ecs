@@ -1,28 +1,23 @@
 require 'ecs/helpers'
 
-class CogCmd::Ecs::Container::Delete < Cog::SubCommand
+module CogCmd::Ecs::Container
+  class Delete < Cog::Command
 
-  include CogCmd::Ecs::Helpers
+    include CogCmd::Ecs::Helpers
 
-  USAGE = <<~END
-  Usage: ecs:container delete <name>
+    def run_command
+      unless def_name = request.args[0]
+        raise Cog::Error, "You must specify a definition name."
+      end
 
-  Deletes the specified container definition
-  END
+      client = Aws::S3::Client.new()
 
-  def run_command
-    unless def_name = request.args[0]
-      msg = "You must specify a definition name."
-      raise CogCmd::Ecs::ArgumentsError, msg
+      key = "#{container_definition_root[:prefix]}#{def_name}.json"
+      client.delete_object(bucket: container_definition_root[:bucket], key: key)
+
+      response.content = { status: "deleted",
+                           name: def_name }
     end
 
-    client = Aws::S3::Client.new()
-
-    key = "#{container_definition_root[:prefix]}#{def_name}.json"
-    client.delete_object(bucket: container_definition_root[:bucket], key: key)
-
-    { status: "deleted",
-      name: def_name }
   end
-
 end
