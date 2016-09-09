@@ -1,65 +1,54 @@
 require 'ecs/helpers'
 
-class CogCmd::Ecs::Task::List < Cog::SubCommand
+module CogCmd::Ecs::Task
+  class List < Cog::Command
 
-  include CogCmd::Ecs::Helpers
+    include CogCmd::Ecs::Helpers
 
-  USAGE = <<~END
-  Usage: ecs:task list [options]
+    def run_command
+      client = Aws::ECS::Client.new()
 
-  Lists tasks for a cluster.
+      ecs_params = Hash[
+        [
+          # Little hack to get around all subcommands having to share options.
+          # list_task_definition only takes the full family name to filter on instead
+          # of the family_prefix. But it still refers to it as the family_prefix.
+          # To hopefully prevent some confusion we renamed it family in the options,
+          # but we accept both family and family-prefix.
+          param_or_nil([ :family_prefix, request.options['family-prefix'] || request.options['family'] ]),
+          param_or_nil([ :max_results, request.options['limit'] ]),
+          param_or_nil([ :status, request.options['status'] ]),
+          param_or_nil([ :sort, request.options['sort'] ])
+        ].compact
+      ]
 
-  Options:
-    --family, -f <family name>   The name of the family with which to filter the results
-    --limit, -l <num>            Limit the number of results returned
-    --status <ACTIVE | INACTIVE> Filter by the desired status of the task. Defaults to ACTIVE
-    --sort <ASC | DESC>          Sort order. Defaults to ASC
+      definition_arns = fetch_task_definitions(client, ecs_params)
+      response.content = process_definition_arns(definition_arns)
 
-  END
+    end
 
-  def run_command
-    client = Aws::ECS::Client.new()
+    private
 
-    ecs_params = Hash[
-      [
-        # Little hack to get around all subcommands having to share options.
-        # list_task_definition only takes the full family name to filter on instead
-        # of the family_prefix. But it still refers to it as the family_prefix.
-        # To hopefully prevent some confusion we renamed it family in the options,
-        # but we accept both family and family-prefix.
-        param_or_nil([ :family_prefix, request.options['family-prefix'] || request.options['family'] ]),
-        param_or_nil([ :max_results, request.options['limit'] ]),
-        param_or_nil([ :status, request.options['status'] ]),
-        param_or_nil([ :sort, request.options['sort'] ])
-      ].compact
-    ]
+    def fetch_task_definitions(client, params, next_token = nil, defs = [])
+      return defs if next_token == :end
 
-    definition_arns = fetch_task_definitions(client, ecs_params)
-    process_definition_arns(definition_arns)
+      params['next_token'] = next_token if next_token
+
+      resp = client.list_task_definitions(params)
+      next_token = resp.next_token || :end
+      definitions = defs.push(resp.task_definition_arns).flatten
+      fetch_task_definitions(client, params, next_token, definitions)
+    end
+
+    def process_definition_arns(arns)
+      arns.reduce(Hash.new) do |acc, arn|
+        family_revision = arn.split('/')[1]
+        family = family_revision.split(':')[0]
+        acc[family] = acc[family] || {family: family, revisions: []}
+        acc[family][:revisions].push(family_revision)
+        acc
+      end.values
+    end
 
   end
-
-  private
-
-  def fetch_task_definitions(client, params, next_token = nil, defs = [])
-    return defs if next_token == :end
-
-    params['next_token'] = next_token if next_token
-
-    resp = client.list_task_definitions(params)
-    next_token = resp.next_token || :end
-    definitions = defs.push(resp.task_definition_arns).flatten
-    fetch_task_definitions(client, params, next_token, definitions)
-  end
-
-  def process_definition_arns(arns)
-    arns.reduce(Hash.new) do |acc, arn|
-      family_revision = arn.split('/')[1]
-      family = family_revision.split(':')[0]
-      acc[family] = acc[family] || {family: family, revisions: []}
-      acc[family][:revisions].push(family_revision)
-      acc
-    end.values
-  end
-
 end
