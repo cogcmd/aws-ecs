@@ -1,12 +1,12 @@
 ---
 cog_bundle_version: 4
 name: ecs
-description: "AWS EC2 Container Service"
-version: "0.0.2"
+description: AWS EC2 Container Service
+version: 0.0.18
 commands:
   container-define:
-    executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
-    description: "Creates a new container definition."
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Creates a new container definition.
     arguments: "<name> <image>"
     options:
       cpu:
@@ -82,10 +82,10 @@ commands:
         type: string
         required: false
     rules:
-      - "must have ecs:container"
+    - must have ecs:container
   container-update:
-    executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
-    description: "Creates a new container definition."
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Updates container definitions.
     arguments: "<name>"
     options:
       image:
@@ -165,6 +165,44 @@ commands:
         type: string
         required: false
     rules:
-      - "must have ecs:container"
+    - must have ecs:container
+  container-list:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists container definitions.
+    rules:
+    - must have ecs:container
+  container-show:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Shows json body of a container definition.
+    arguments: "<name>"
+    rules:
+    - must have ecs:container
+  container-delete:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Deletes container definitions.
+    arguments: "<name>"
+    rules:
+    - must have ecs:container
 permissions:
-  - ecs:container
+- ecs:container
+templates:
+  definition_table:
+    body: |
+      | Name | Last Modified |
+      | ---- | ------------- |
+      ~each var=$results as=definition~| ~$definition.name~ | ~$definition.last_modified~ |
+      ~end~
+  definition_show:
+    body: |
+      ~each var=$results as=definition~
+      Name: ~$definition.name~
+      Image: ~$definition.image~
+
+      Definition body:
+      ~json var=$definition~
+      ~end~
+  definition_delete:
+    body: |
+      ~each var=$results as=definition~
+      Deleted ~$definition.name~
+      ~end~

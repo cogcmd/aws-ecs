@@ -15,6 +15,7 @@ module CogCmd::Ecs::Container
       key = "#{container_definition_root[:prefix]}#{def_name}.json"
       client.delete_object(bucket: container_definition_root[:bucket], key: key)
 
+      response.template = 'definition_delete'
       response.content = { status: "deleted",
                            name: def_name }
     end

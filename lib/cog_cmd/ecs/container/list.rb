@@ -18,6 +18,7 @@ module CogCmd::Ecs::Container
           last_modified: obj.last_modified }
       }
 
+      response.template = 'definition_table'
       response.content = resp
     end
 

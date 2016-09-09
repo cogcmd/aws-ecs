@@ -32,6 +32,7 @@ module CogCmd::Ecs::Container
       client.put_object(bucket: bucket, key: key, body: body)
       resp = client.get_object(bucket: bucket, key: key)
 
+      response.template = 'definition_show'
       response.content = JSON.parse(resp.body.read)
     end
 

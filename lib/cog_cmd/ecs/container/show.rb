@@ -16,6 +16,7 @@ module CogCmd::Ecs::Container
       key = "#{container_definition_root[:prefix]}#{def_name}.json"
       resp = client.get_object(bucket: container_definition_root[:bucket], key: key)
 
+      response.template = 'definition_show'
       response.content = JSON.parse(resp.body.read)
     end
 
