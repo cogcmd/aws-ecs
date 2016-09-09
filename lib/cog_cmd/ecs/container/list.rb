@@ -1,27 +1,26 @@
 require 'ecs/helpers'
 
-class CogCmd::Ecs::Container::List < Cog::SubCommand
+module CogCmd::Ecs::Container
+  class List < Cog::Command
 
-  include CogCmd::Ecs::Helpers
+    include CogCmd::Ecs::Helpers
 
-  USAGE = <<~END
-  Usage: ecs:container list
+    def run_command
+      client = Aws::S3::Client.new()
 
-  Lists ECS container definitions.
-  END
+      resp = client.list_objects_v2(bucket: container_definition_root[:bucket], prefix: container_definition_root[:prefix])
+      .contents
+      .find_all { |obj|
+        obj.key.end_with?('.json')
+      }
+      .map { |obj|
+        { name: strip_json(strip_prefix(obj.key)),
+          last_modified: obj.last_modified }
+      }
 
-  def run_command
-    client = Aws::S3::Client.new()
+      response.template = 'definition_table'
+      response.content = resp
+    end
 
-    client.list_objects_v2(bucket: container_definition_root[:bucket], prefix: container_definition_root[:prefix])
-    .contents
-    .find_all { |obj|
-      obj.key.end_with?('.json')
-    }
-    .map { |obj|
-      { name: strip_json(strip_prefix(obj.key)),
-        last_modified: obj.last_modified }
-    }
   end
-
 end

@@ -1,17 +1,14 @@
 ---
-cog_bundle_version: 3
+cog_bundle_version: 4
 name: ecs
-description: "AWS EC2 Container Service"
-version: "0.0.6"
+description: AWS EC2 Container Service
+version: 0.0.18
 commands:
-  container:
-    executable: /Users/mpeck/op/cogcmds/aws-ecs/cog-command
-    description: "Manage ECS Container Definitions"
+  container-define:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Creates a new container definition.
+    arguments: "<name> <image>"
     options:
-      help:
-        type: bool
-        required: false
-        short_flag: h
       cpu:
         type: int
         required: false
@@ -85,6 +82,127 @@ commands:
         type: string
         required: false
     rules:
-      - "must have ecs:container"
+    - must have ecs:container
+  container-update:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Updates container definitions.
+    arguments: "<name>"
+    options:
+      image:
+        type: string
+        required: false
+        short_flag: i
+      cpu:
+        type: int
+        required: false
+      memory:
+        type: int
+        required: false
+      memory-reservation:
+        type: int
+        required: false
+      link:
+        type: list
+        required: false
+      port-mapping:
+        type: list
+        required: false
+      essential:
+        type: bool
+        required: false
+      entry-point:
+        type: string
+        required: false
+      command:
+        type: string
+        required: false
+      env:
+        type: list
+        required: false
+      mount-point:
+        type: list
+        required: false
+      volume-from:
+        type: list
+        required: false
+      hostname:
+        type: string
+        required: false
+      user:
+        type: string
+        required: false
+      working-directory:
+        type: string
+        required: false
+      disable-networking:
+        type: bool
+        required: false
+      privileged:
+        type: bool
+        required: false
+      readonly-root-filesystem:
+        type: bool
+        required: false
+      dns-server:
+        type: list
+        required: false
+      dns-search-domain:
+        type: list
+        required: false
+      extra-host:
+        type: list
+        required: false
+      docker-security-option:
+        type: list
+        required: false
+      docker-label:
+        type: list
+        required: false
+      ulimit:
+        type: list
+        required: false
+      log-configuration:
+        type: string
+        required: false
+    rules:
+    - must have ecs:container
+  container-list:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists container definitions.
+    rules:
+    - must have ecs:container
+  container-show:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Shows json body of a container definition.
+    arguments: "<name>"
+    rules:
+    - must have ecs:container
+  container-delete:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Deletes container definitions.
+    arguments: "<name>"
+    rules:
+    - must have ecs:container
 permissions:
-  - ecs:container
+- ecs:container
+templates:
+  definition_table:
+    body: |
+      | Name | Last Modified |
+      | ---- | ------------- |
+      ~each var=$results as=definition~| ~$definition.name~ | ~$definition.last_modified~ |
+      ~end~
+  definition_show:
+    body: |
+      ~each var=$results as=definition~
+      Name: ~$definition.name~
+      Image: ~$definition.image~
+
+      Definition body:
+      ~json var=$definition~
+      ~end~
+  definition_delete:
+    body: |
+      ~each var=$results as=definition~
+      Deleted ~$definition.name~
+      ~end~

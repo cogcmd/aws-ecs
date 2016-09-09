@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'cog-rb', '~> 0.2.0'
+gem 'cog-rb', '~> 0.3.0'
 gem 'aws-sdk', '~> 2.5'
