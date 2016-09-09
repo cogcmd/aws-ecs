@@ -12,75 +12,127 @@ commands:
       cpu:
         type: int
         required: false
+        description: The number of cpu units reserved for the container.
       memory:
         type: int
         required: false
+        description: The hard limit (in MiB) of memory to present to the container.
       memory-reservation:
         type: int
         required: false
+        description: The soft limit (in MiB) of memory to reserve for the container.
       link:
         type: list
         required: false
+        description: The link parameter allows containers to communicate with each
+          other without the need for port mappings, using the name parameter and optionally,
+          an alias for the link. Can be specified multiple times.
       port-mapping:
         type: list
         required: false
+        description: The list of port mappings for the container. Specified as 'tcp|udp:container_port:host_port'.
+          Can be specified multiple times.
       essential:
         type: bool
         required: false
+        description: If the essential parameter of a container is marked as true,
+          and that container fails or stops for any reason, all other containers that
+          are part of the task are stopped.
       entry-point:
         type: string
         required: false
+        description: |-
+          An ENTRYPOINT allows you to configure a container that will run as an executable.
+          Note: The entrypoint is passed to ECS as an array. The argument will be split on ' '. So for example: '--entrypoint "echo foo"' would be passed as ["echo", "foo"].
       command:
         type: string
         required: false
+        description: |-
+          The command that is passed to the container.
+          Note: Like entrypoint the command is passed to ECS as an array.
       env:
         type: list
         required: false
+        description: The environment variables to pass to a container. Specified as
+          'key=value'. Can be specified multiple times
       mount-point:
         type: list
         required: false
+        description: The mount points for data volumes in your container. Specified
+          as 'source_volume:container_path:read_only'. If not specified 'read_only'
+          defaults to 'false'. Can be specified multiple times.
       volume-from:
         type: list
         required: false
+        description: Data volumes to mount from another container. Specified as 'source_container:read_only'.
+          If not specified 'read_only' defaults to 'false'. Can be specified multiple
+          times.
       hostname:
         type: string
         required: false
+        description: The hostname to use for the container.
       user:
         type: string
         required: false
+        description: The user name to use inside the container.
       working-directory:
         type: string
         required: false
+        description: The working directory in which to run commands inside the container.
       disable-networking:
         type: bool
         required: false
+        description: When this parameter is true, networking is disabled within the
+          container. Defaults to 'false'.
       privileged:
         type: bool
         required: false
+        description: When this parameter is true, the container is given elevated
+          privileges on the host container instance (similar to the root user). Defaults
+          to 'false'.
       readonly-root-filesystem:
         type: bool
         required: false
+        description: When this parameter is true, the container is given read-only
+          access to its root file system. Defaults to 'false'.
       dns-server:
         type: list
         required: false
+        description: A DNS server that is presented to the container. Can be specified
+          multiple times.
       dns-search-domain:
         type: list
         required: false
+        description: A DNS search domain that is presented to the container. Can be
+          specified multiple times.
       extra-host:
         type: list
         required: false
+        description: Hostname and IP address mapping to append to the /etc/hosts file
+          on the container. Specified as 'hostname:ip_address'. Can be specified multiple
+          times.
       docker-security-option:
         type: list
         required: false
+        description: A string to provide a custom label for SELinux and AppArmor multi-level
+          security systems. Can be specified multiple times.
       docker-label:
         type: list
         required: false
+        description: A key/value map of labels to add to the container. Specified
+          as 'key=value'. Can be specified multiple times.
       ulimit:
         type: list
         required: false
+        description: |-
+          A ulimit to set in the container. Specified as 'name:soft_limit:hard_limit'.
+          Note: name can be one of [core, cpu, data, fsize, locks, memlock, msgqueue, nice, nofile, nproc, rss, rtprio, rttime, sigpending, stack]. Can be specified multiple times.
       log-configuration:
         type: string
         required: false
+        description: |-
+          The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
+          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-update:
@@ -92,78 +144,131 @@ commands:
         type: string
         required: false
         short_flag: i
+        description: The image used to start a container.
       cpu:
         type: int
         required: false
+        description: The number of cpu units reserved for the container.
       memory:
         type: int
         required: false
+        description: The hard limit (in MiB) of memory to present to the container.
       memory-reservation:
         type: int
         required: false
+        description: The soft limit (in MiB) of memory to reserve for the container.
       link:
         type: list
         required: false
+        description: The link parameter allows containers to communicate with each
+          other without the need for port mappings, using the name parameter and optionally,
+          an alias for the link. Can be specified multiple times.
       port-mapping:
         type: list
         required: false
+        description: The list of port mappings for the container. Specified as 'tcp|udp:container_port:host_port'.
+          Can be specified multiple times.
       essential:
         type: bool
         required: false
+        description: If the essential parameter of a container is marked as true,
+          and that container fails or stops for any reason, all other containers that
+          are part of the task are stopped.
       entry-point:
         type: string
         required: false
+        description: |-
+          An ENTRYPOINT allows you to configure a container that will run as an executable.
+          Note: The entrypoint is passed to ECS as an array. The argument will be split on ' '. So for example: '--entrypoint "echo foo"' would be passed as ["echo", "foo"].
       command:
         type: string
         required: false
+        description: |-
+          The command that is passed to the container.
+          Note: Like entrypoint the command is passed to ECS as an array.
       env:
         type: list
         required: false
+        description: The environment variables to pass to a container. Specified as
+          'key=value'. Can be specified multiple times
       mount-point:
         type: list
         required: false
+        description: The mount points for data volumes in your container. Specified
+          as 'source_volume:container_path:read_only'. If not specified 'read_only'
+          defaults to 'false'. Can be specified multiple times.
       volume-from:
         type: list
         required: false
+        description: Data volumes to mount from another container. Specified as 'source_container:read_only'.
+          If not specified 'read_only' defaults to 'false'. Can be specified multiple
+          times.
       hostname:
         type: string
         required: false
+        description: The hostname to use for the container.
       user:
         type: string
         required: false
+        description: The user name to use inside the container.
       working-directory:
         type: string
         required: false
+        description: The working directory in which to run commands inside the container.
       disable-networking:
         type: bool
         required: false
+        description: When this parameter is true, networking is disabled within the
+          container. Defaults to 'false'.
       privileged:
         type: bool
         required: false
+        description: When this parameter is true, the container is given elevated
+          privileges on the host container instance (similar to the root user). Defaults
+          to 'false'.
       readonly-root-filesystem:
         type: bool
         required: false
+        description: When this parameter is true, the container is given read-only
+          access to its root file system. Defaults to 'false'.
       dns-server:
         type: list
         required: false
+        description: A DNS server that is presented to the container. Can be specified
+          multiple times.
       dns-search-domain:
         type: list
         required: false
+        description: A DNS search domain that is presented to the container. Can be
+          specified multiple times.
       extra-host:
         type: list
         required: false
+        description: Hostname and IP address mapping to append to the /etc/hosts file
+          on the container. Specified as 'hostname:ip_address'. Can be specified multiple
+          times.
       docker-security-option:
         type: list
         required: false
+        description: A string to provide a custom label for SELinux and AppArmor multi-level
+          security systems. Can be specified multiple times.
       docker-label:
         type: list
         required: false
+        description: A key/value map of labels to add to the container. Specified
+          as 'key=value'. Can be specified multiple times.
       ulimit:
         type: list
         required: false
+        description: |-
+          A ulimit to set in the container. Specified as 'name:soft_limit:hard_limit'.
+          Note: name can be one of [core, cpu, data, fsize, locks, memlock, msgqueue, nice, nofile, nproc, rss, rtprio, rttime, sigpending, stack]. Can be specified multiple times.
       log-configuration:
         type: string
         required: false
+        description: |-
+          The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
+          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-list:
