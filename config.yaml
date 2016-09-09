@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.2
+version: 0.0.34
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -295,7 +295,8 @@ commands:
     - must have ecs:task
   task-register:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
-    description: |-
+    description: Registers a new task.
+    long_description: |-
       Registers a new task.
       Note: Definitions are container definition names as listed by ecs:container list.
     arguments: "<family> <def1 | def2 | ...>"
@@ -361,7 +362,8 @@ commands:
     - must have ecs:task
   task-show:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
-    description: |-
+    description: Shows the task definition.
+    long_description: |-
       Shows the task definition.
       Note: You can supply the family and revision or just the family. If you supply just the family the latest active revision in the family will be assumed.
     arguments: "<family | family:revision>"
@@ -390,4 +392,38 @@ templates:
     body: |
       ~each var=$results as=definition~
       Deleted ~$definition.name~
+      ~end~
+  task_table:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revisions**: ~join var=$task.revisions~~$item~~end~
+      ~br~
+      ~end~
+  task_list:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revisions**: ~join var=$task.revisions~~$item~~end~
+      ~br~
+      ~end~
+  task_show:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revision**: ~$task.revision~
+      **status**: ~$task.status~
+      **Task Definition ARN**: ~$task.task_definition_arn~
+      ~if cond=$task.volumes not_empty?~
+      **Volumes**:
+      ~json var=$task.volumes~
+      ~br~
+      ~end~
+      **Container Definitions**:
+      ~json var=$task.container_definitions~
+      ~end~
+  task_family_list:
+    body: |
+      ~each var=$results as=task~
+      ~$task.family~
       ~end~

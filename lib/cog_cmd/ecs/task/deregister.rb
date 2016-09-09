@@ -18,7 +18,8 @@ module CogCmd::Ecs::Task
 
       results = client.deregister_task_definition(task_definition: task)
 
-      response.content = results.to_h
+      response.template = 'task_show'
+      response.content = results.task_definition.to_h
     end
 
   end

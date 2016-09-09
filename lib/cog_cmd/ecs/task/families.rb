@@ -20,6 +20,7 @@ module CogCmd::Ecs::Task
         { family: family }
       end
 
+      response.template = 'task_family_list'
       response.content = results
     end
 

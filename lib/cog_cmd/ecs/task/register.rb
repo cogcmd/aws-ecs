@@ -36,7 +36,8 @@ module CogCmd::Ecs::Task
 
       results = client.register_task_definition(ecs_params)
 
-      response.content = results.to_h
+      response.template = 'task_show'
+      response.content = results.task_definition.to_h
     end
 
     private

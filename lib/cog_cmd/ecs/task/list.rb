@@ -22,9 +22,11 @@ module CogCmd::Ecs::Task
         ].compact
       ]
 
+
+      response.template = 'task_table'
+
       definition_arns = fetch_task_definitions(client, ecs_params)
       response.content = process_definition_arns(definition_arns)
-
     end
 
     private

@@ -1,5 +1,4 @@
 require 'aws-sdk'
-require 'ecs/exceptions'
 
 # If an AWS STS ROLE is defined, configure the AWS SDK to assume it
 if ENV['AWS_STS_ROLE_ARN']
@@ -12,20 +11,6 @@ if ENV['AWS_STS_ROLE_ARN']
 end
 
 module CogCmd::Ecs::Helpers
-
-  # TODO: When we get templates worked out we should remove the formatting
-  # bits from here
-  def usage(msg, err_msg = nil)
-    if err_msg
-      "```#{msg}```\n#{err_msg}"
-    else
-      "```#{msg}```"
-    end
-  end
-
-  def error(msg)
-    "ecs: error: #{msg}"
-  end
 
   # Takes param in the form of '[ param_name, param_value]'. Returns nil if
   # param_value is nil.

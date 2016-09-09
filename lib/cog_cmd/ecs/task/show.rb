@@ -12,9 +12,10 @@ module CogCmd::Ecs::Task
 
       client = Aws::ECS::Client.new()
 
-      results = client.describe_task_definition(task_definition: task)
+      result = client.describe_task_definition(task_definition: task)
 
-      response.content = results.to_h
+      response.template = 'task_show'
+      response.content = result.task_definition.to_h
     end
 
   end
