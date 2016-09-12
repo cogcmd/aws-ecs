@@ -7,7 +7,7 @@ module CogCmd::Ecs::Task
 
     def run_command
       unless task = request.args[0]
-        raise CogCmd::Ecs::ArgumentError, 'A family or family and revision must be specified'
+        raise Cog::Error, 'A family or family and revision must be specified'
       end
 
       client = Aws::ECS::Client.new()

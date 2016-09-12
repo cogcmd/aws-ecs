@@ -9,11 +9,11 @@ module CogCmd::Ecs::Task
       args = request.args
 
       unless family = args.shift
-        raise CogCmd::Ecs::ArgumentError, "A family must be specified."
+        raise Cog::Error, "A family must be specified."
       end
 
       unless args.length > 0 || request.options['use-previous-revision']
-        raise CogCmd::Ecs::ArgumentError, "At least one container definition must be specified."
+        raise Cog::Error, "At least one container definition must be specified."
       end
 
       client = Aws::ECS::Client.new()

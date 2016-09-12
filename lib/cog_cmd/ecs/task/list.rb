@@ -1,4 +1,5 @@
 require 'cog_cmd/ecs/helpers'
+require 'pry'
 
 module CogCmd::Ecs::Task
   class List < Cog::Command
@@ -43,6 +44,8 @@ module CogCmd::Ecs::Task
     end
 
     def process_definition_arns(arns)
+      return unless arns.compact.length > 0
+
       arns.reduce(Hash.new) do |acc, arn|
         family_revision = arn.split('/')[1]
         family = family_revision.split(':')[0]
