@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.34
+version: 0.0.36
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -291,6 +291,27 @@ commands:
   task-list:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
     description: Lists registered tasks.
+    options:
+      family:
+        type: string
+        required: false
+        short_flag: f
+        description: The name of the family with which to filter the results.
+      limit:
+        type: int
+        required: false
+        short_flag: l
+        description: Limit the number of results returned.
+      status:
+        type: string
+        required: false
+        short_flag: s
+        description: Filter by the desired status of the task. Can be one of active, inactive.
+      sort:
+        type: string
+        required: false
+        short_flag: o
+        description: The order to sort results in. Can be one of acs, desc.
     rules:
     - must have ecs:task
   task-register:
