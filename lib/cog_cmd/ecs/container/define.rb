@@ -1,6 +1,6 @@
 require 'json'
-require 'ecs/helpers'
-require 'ecs/container/helpers'
+require 'cog_cmd/ecs/helpers'
+require 'cog_cmd/ecs/container/helpers'
 
 module CogCmd::Ecs::Container
   class Define < Cog::Command

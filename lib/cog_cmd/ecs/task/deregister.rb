@@ -1,4 +1,4 @@
-require 'ecs/helpers'
+require 'cog_cmd/ecs/helpers'
 
 module CogCmd::Ecs::Task
   class Deregister < Cog::Command
