@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.18
+version: 0.0.36
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -12,75 +12,127 @@ commands:
       cpu:
         type: int
         required: false
+        description: The number of cpu units reserved for the container.
       memory:
         type: int
         required: false
+        description: The hard limit (in MiB) of memory to present to the container.
       memory-reservation:
         type: int
         required: false
+        description: The soft limit (in MiB) of memory to reserve for the container.
       link:
         type: list
         required: false
+        description: The link parameter allows containers to communicate with each
+          other without the need for port mappings, using the name parameter and optionally,
+          an alias for the link. Can be specified multiple times.
       port-mapping:
         type: list
         required: false
+        description: The list of port mappings for the container. Specified as 'tcp|udp:container_port:host_port'.
+          Can be specified multiple times.
       essential:
         type: bool
         required: false
+        description: If the essential parameter of a container is marked as true,
+          and that container fails or stops for any reason, all other containers that
+          are part of the task are stopped.
       entry-point:
         type: string
         required: false
+        description: |-
+          An ENTRYPOINT allows you to configure a container that will run as an executable.
+          Note: The entrypoint is passed to ECS as an array. The argument will be split on ' '. So for example: '--entrypoint "echo foo"' would be passed as ["echo", "foo"].
       command:
         type: string
         required: false
+        description: |-
+          The command that is passed to the container.
+          Note: Like entrypoint the command is passed to ECS as an array.
       env:
         type: list
         required: false
+        description: The environment variables to pass to a container. Specified as
+          'key=value'. Can be specified multiple times
       mount-point:
         type: list
         required: false
+        description: The mount points for data volumes in your container. Specified
+          as 'source_volume:container_path:read_only'. If not specified 'read_only'
+          defaults to 'false'. Can be specified multiple times.
       volume-from:
         type: list
         required: false
+        description: Data volumes to mount from another container. Specified as 'source_container:read_only'.
+          If not specified 'read_only' defaults to 'false'. Can be specified multiple
+          times.
       hostname:
         type: string
         required: false
+        description: The hostname to use for the container.
       user:
         type: string
         required: false
+        description: The user name to use inside the container.
       working-directory:
         type: string
         required: false
+        description: The working directory in which to run commands inside the container.
       disable-networking:
         type: bool
         required: false
+        description: When this parameter is true, networking is disabled within the
+          container. Defaults to 'false'.
       privileged:
         type: bool
         required: false
+        description: When this parameter is true, the container is given elevated
+          privileges on the host container instance (similar to the root user). Defaults
+          to 'false'.
       readonly-root-filesystem:
         type: bool
         required: false
+        description: When this parameter is true, the container is given read-only
+          access to its root file system. Defaults to 'false'.
       dns-server:
         type: list
         required: false
+        description: A DNS server that is presented to the container. Can be specified
+          multiple times.
       dns-search-domain:
         type: list
         required: false
+        description: A DNS search domain that is presented to the container. Can be
+          specified multiple times.
       extra-host:
         type: list
         required: false
+        description: Hostname and IP address mapping to append to the /etc/hosts file
+          on the container. Specified as 'hostname:ip_address'. Can be specified multiple
+          times.
       docker-security-option:
         type: list
         required: false
+        description: A string to provide a custom label for SELinux and AppArmor multi-level
+          security systems. Can be specified multiple times.
       docker-label:
         type: list
         required: false
+        description: A key/value map of labels to add to the container. Specified
+          as 'key=value'. Can be specified multiple times.
       ulimit:
         type: list
         required: false
+        description: |-
+          A ulimit to set in the container. Specified as 'name:soft_limit:hard_limit'.
+          Note: name can be one of [core, cpu, data, fsize, locks, memlock, msgqueue, nice, nofile, nproc, rss, rtprio, rttime, sigpending, stack]. Can be specified multiple times.
       log-configuration:
         type: string
         required: false
+        description: |-
+          The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
+          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-update:
@@ -92,78 +144,131 @@ commands:
         type: string
         required: false
         short_flag: i
+        description: The image used to start a container.
       cpu:
         type: int
         required: false
+        description: The number of cpu units reserved for the container.
       memory:
         type: int
         required: false
+        description: The hard limit (in MiB) of memory to present to the container.
       memory-reservation:
         type: int
         required: false
+        description: The soft limit (in MiB) of memory to reserve for the container.
       link:
         type: list
         required: false
+        description: The link parameter allows containers to communicate with each
+          other without the need for port mappings, using the name parameter and optionally,
+          an alias for the link. Can be specified multiple times.
       port-mapping:
         type: list
         required: false
+        description: The list of port mappings for the container. Specified as 'tcp|udp:container_port:host_port'.
+          Can be specified multiple times.
       essential:
         type: bool
         required: false
+        description: If the essential parameter of a container is marked as true,
+          and that container fails or stops for any reason, all other containers that
+          are part of the task are stopped.
       entry-point:
         type: string
         required: false
+        description: |-
+          An ENTRYPOINT allows you to configure a container that will run as an executable.
+          Note: The entrypoint is passed to ECS as an array. The argument will be split on ' '. So for example: '--entrypoint "echo foo"' would be passed as ["echo", "foo"].
       command:
         type: string
         required: false
+        description: |-
+          The command that is passed to the container.
+          Note: Like entrypoint the command is passed to ECS as an array.
       env:
         type: list
         required: false
+        description: The environment variables to pass to a container. Specified as
+          'key=value'. Can be specified multiple times
       mount-point:
         type: list
         required: false
+        description: The mount points for data volumes in your container. Specified
+          as 'source_volume:container_path:read_only'. If not specified 'read_only'
+          defaults to 'false'. Can be specified multiple times.
       volume-from:
         type: list
         required: false
+        description: Data volumes to mount from another container. Specified as 'source_container:read_only'.
+          If not specified 'read_only' defaults to 'false'. Can be specified multiple
+          times.
       hostname:
         type: string
         required: false
+        description: The hostname to use for the container.
       user:
         type: string
         required: false
+        description: The user name to use inside the container.
       working-directory:
         type: string
         required: false
+        description: The working directory in which to run commands inside the container.
       disable-networking:
         type: bool
         required: false
+        description: When this parameter is true, networking is disabled within the
+          container. Defaults to 'false'.
       privileged:
         type: bool
         required: false
+        description: When this parameter is true, the container is given elevated
+          privileges on the host container instance (similar to the root user). Defaults
+          to 'false'.
       readonly-root-filesystem:
         type: bool
         required: false
+        description: When this parameter is true, the container is given read-only
+          access to its root file system. Defaults to 'false'.
       dns-server:
         type: list
         required: false
+        description: A DNS server that is presented to the container. Can be specified
+          multiple times.
       dns-search-domain:
         type: list
         required: false
+        description: A DNS search domain that is presented to the container. Can be
+          specified multiple times.
       extra-host:
         type: list
         required: false
+        description: Hostname and IP address mapping to append to the /etc/hosts file
+          on the container. Specified as 'hostname:ip_address'. Can be specified multiple
+          times.
       docker-security-option:
         type: list
         required: false
+        description: A string to provide a custom label for SELinux and AppArmor multi-level
+          security systems. Can be specified multiple times.
       docker-label:
         type: list
         required: false
+        description: A key/value map of labels to add to the container. Specified
+          as 'key=value'. Can be specified multiple times.
       ulimit:
         type: list
         required: false
+        description: |-
+          A ulimit to set in the container. Specified as 'name:soft_limit:hard_limit'.
+          Note: name can be one of [core, cpu, data, fsize, locks, memlock, msgqueue, nice, nofile, nproc, rss, rtprio, rttime, sigpending, stack]. Can be specified multiple times.
       log-configuration:
         type: string
         required: false
+        description: |-
+          The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
+          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-list:
@@ -183,8 +288,111 @@ commands:
     arguments: "<name>"
     rules:
     - must have ecs:container
+  task-list:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists registered tasks.
+    options:
+      family:
+        type: string
+        required: false
+        short_flag: f
+        description: The name of the family with which to filter the results.
+      limit:
+        type: int
+        required: false
+        short_flag: l
+        description: Limit the number of results returned.
+      status:
+        type: string
+        required: false
+        short_flag: s
+        description: Filter by the desired status of the task. Can be one of active, inactive.
+      sort:
+        type: string
+        required: false
+        short_flag: o
+        description: The order to sort results in. Can be one of acs, desc.
+    rules:
+    - must have ecs:task
+  task-register:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Registers a new task.
+    long_description: |-
+      Registers a new task.
+      Note: Definitions are container definition names as listed by ecs:container list.
+    arguments: "<family> <def1 | def2 | ...>"
+    options:
+      role:
+        type: string
+        required: false
+        short_flag: r
+        description: IAM Role for containers in this task to assume
+      network-mode:
+        type: string
+        required: false
+        short_flag: m
+        description: Docker networking mode. One of (bridge, host, none)
+      volume:
+        type: list
+        required: false
+        short_flag: v
+        description: Volume definition defined as 'name:path' (Can be specified multiple
+          times)
+      replace-volumes:
+        type: bool
+        required: false
+        description: |-
+          When true existing volumes are replaced.
+          Note: Only valid with --use-previous-revision By default if a volume is declared with the same name it is replaced otherwise the volume is appended to the list.
+      use-previous-revision:
+        type: bool
+        required: false
+        short_flag: p
+        description: Use the previous revision as a base.
+      replace-definitions:
+        type: bool
+        required: false
+        description: |-
+          When true existing container definitions are replaced.
+          Note: Only valid with --use-previous-revision By default definitions are only replaced if one with the same name is specified. Otherwise definitions are appended to the list.
+    rules:
+    - must have ecs:task
+  task-deregister:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Deregisters tasks.
+    arguments: "<family:revision>"
+    rules:
+    - must have ecs:task
+  task-families:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists task definition families.
+    options:
+      family-prefix:
+        type: string
+        required: false
+        short_flag: f
+      limit:
+        type: int
+        required: false
+        short_flag: i
+      status:
+        type: string
+        required: false
+        short_flag: s
+    rules:
+    - must have ecs:task
+  task-show:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Shows the task definition.
+    long_description: |-
+      Shows the task definition.
+      Note: You can supply the family and revision or just the family. If you supply just the family the latest active revision in the family will be assumed.
+    arguments: "<family | family:revision>"
+    rules:
+    - must have ecs:task
 permissions:
 - ecs:container
+- ecs:task
 templates:
   definition_table:
     body: |
@@ -205,4 +413,38 @@ templates:
     body: |
       ~each var=$results as=definition~
       Deleted ~$definition.name~
+      ~end~
+  task_table:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revisions**: ~join var=$task.revisions~~$item~~end~
+      ~br~
+      ~end~
+  task_list:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revisions**: ~join var=$task.revisions~~$item~~end~
+      ~br~
+      ~end~
+  task_show:
+    body: |
+      ~each var=$results as=task~
+      **Family**: ~$task.family~
+      **Revision**: ~$task.revision~
+      **status**: ~$task.status~
+      **Task Definition ARN**: ~$task.task_definition_arn~
+      ~if cond=$task.volumes not_empty?~
+      **Volumes**:
+      ~json var=$task.volumes~
+      ~br~
+      ~end~
+      **Container Definitions**:
+      ~json var=$task.container_definitions~
+      ~end~
+  task_family_list:
+    body: |
+      ~each var=$results as=task~
+      ~$task.family~
       ~end~

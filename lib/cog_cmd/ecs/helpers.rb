@@ -12,18 +12,11 @@ end
 
 module CogCmd::Ecs::Helpers
 
-  # TODO: When we get templates worked out we should remove the formatting
-  # bits from here
-  def usage(msg, err_msg = nil)
-    if err_msg
-      "```#{msg}```\n#{err_msg}"
-    else
-      "```#{msg}```"
-    end
-  end
-
-  def error(msg)
-    "ecs: error: #{msg}"
+  # Takes param in the form of '[ param_name, param_value]'. Returns nil if
+  # param_value is nil.
+  def param_or_nil(param)
+    return nil if param[1] == nil
+    param
   end
 
   def strip_prefix(str)
