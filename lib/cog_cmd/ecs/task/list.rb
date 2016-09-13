@@ -10,12 +10,10 @@ module CogCmd::Ecs::Task
 
       ecs_params = Hash[
         [
-          # Little hack to get around all subcommands having to share options.
           # list_task_definition only takes the full family name to filter on instead
           # of the family_prefix. But it still refers to it as the family_prefix.
-          # To hopefully prevent some confusion we renamed it family in the options,
-          # but we accept both family and family-prefix.
-          param_or_nil([ :family_prefix, request.options['family-prefix'] || request.options['family'] ]),
+          # To hopefully prevent some confusion we renamed it family in the options.
+          param_or_nil([ :family_prefix, request.options['family'] ]),
           param_or_nil([ :max_results, request.options['limit'] ]),
           param_or_nil([ :status, request.options['status'] ]),
           param_or_nil([ :sort, request.options['sort'] ])
