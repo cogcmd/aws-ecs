@@ -46,10 +46,4 @@ describe 'the task-list command' do
     run_command(options: { family: 'myfamily' })
   end
 
-  it 'sends a family-prefix when the family-prefix option is specified' do
-    expect(client).to receive(:list_task_definitions).with({family_prefix: 'myfamily'}).and_return(Aws::ECS::Types::ListTaskDefinitionsResponse.new)
-
-    run_command(options: { 'family-prefix': 'myfamily' })
-  end
-
 end
