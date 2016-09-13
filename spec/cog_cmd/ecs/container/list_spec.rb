@@ -12,7 +12,7 @@ describe 'the container-list command' do
   let(:object_list) do
     obj = Aws::S3::Types::Object.new(key: 'container-definitions/mydef.json',
                                      last_modified: '2016-09-06 23:39:15 UTC')
-    Aws::S3::Types::ListObjectsV2Output.new(contents: Array.new.push(obj))
+    Aws::S3::Types::ListObjectsV2Output.new(contents: [obj])
   end
 
   it 'returns a list of container definitions' do
