@@ -1,4 +1,4 @@
-require 'ecs/helpers'
+require 'cog_cmd/ecs/helpers'
 
 module CogCmd::Ecs::Task
   class Deregister < Cog::Command
@@ -7,11 +7,11 @@ module CogCmd::Ecs::Task
 
     def run_command
       unless task = request.args[0]
-        raise CogCmd::Ecs::ArgumentError, "You must specify a family and revision 'family:revision'"
+        raise Cog::Error, "You must specify a family and revision 'family:revision'"
       end
 
       unless task.split(':')[1]
-        raise CogCmd::Ecs::ArgumentError, "You must specify a family and revision 'family:revision'"
+        raise Cog::Error, "You must specify a family and revision 'family:revision'"
       end
 
       client = Aws::ECS::Client.new()
