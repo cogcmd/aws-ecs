@@ -43,7 +43,7 @@ module CogCmd::Ecs::Task
     end
 
     def process_definition_arns(arns)
-      return unless arns.compact.length > 0
+      return [] unless arns.compact.length > 0
 
       arns.reduce(Hash.new) do |acc, arn|
         family_revision = arn.split('/')[1]
