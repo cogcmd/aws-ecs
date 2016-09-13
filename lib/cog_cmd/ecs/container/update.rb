@@ -9,10 +9,19 @@ module CogCmd::Ecs::Container
     include CogCmd::Ecs::Container::Helpers
 
     def run_command
-      unless def_name = request.args[0]
-        raise Cog::Error, "A container definition name must be specified."
-      end
+      raise(Cog::Error, "A container definition name must be specified.") unless def_name
 
+      response.template = 'definition_show'
+      response.content = update_container_definition
+    end
+
+    private
+
+    def def_name
+      request.args[0]
+    end
+
+    def update_container_definition
       client = Aws::S3::Client.new()
 
       bucket = container_definition_root[:bucket]
@@ -25,10 +34,7 @@ module CogCmd::Ecs::Container
       body = JSON.pretty_generate(container_def.to_h)
 
       client.put_object(bucket: bucket, key: key, body: body)
-      resp = client.get_object(bucket: container_definition_root[:bucket], key: key)
-
-      response.template = 'definition_show'
-      response.content = JSON.parse(resp.body.read)
+      JSON.parse(client.get_object(bucket: container_definition_root[:bucket], key: key).body.read)
     end
 
   end
