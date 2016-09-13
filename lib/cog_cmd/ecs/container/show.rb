@@ -7,17 +7,23 @@ module CogCmd::Ecs::Container
     include CogCmd::Ecs::Helpers
 
     def run_command
-      unless def_name = request.args[0]
-        raise Cog::Error, "You must specify a definition name."
-      end
+      raise(Cog::Error, "You must specify a definition name.") unless def_name
 
+      response.template = 'definition_show'
+      response.content = get_container_definition
+    end
+
+    private
+
+    def def_name
+      request.args[0]
+    end
+
+    def get_container_definition
       client = Aws::S3::Client.new()
 
       key = "#{container_definition_root[:prefix]}#{def_name}.json"
-      resp = client.get_object(bucket: container_definition_root[:bucket], key: key)
-
-      response.template = 'definition_show'
-      response.content = JSON.parse(resp.body.read)
+      JSON.parse(client.get_object(bucket: container_definition_root[:bucket], key: key).body.read)
     end
 
   end
