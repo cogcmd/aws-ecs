@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'the container-define command' do
   let(:command_name) { 'container-define' }
 
-  let(:client) do
-    client = Object.new
+  let(:client) { Object.new }
+
+  before do
     allow(Aws::S3::Client).to receive(:new).and_return(client)
-    client
   end
 
   it 'defines a new container definition' do

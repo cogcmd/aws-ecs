@@ -3,11 +3,12 @@ require 'spec_helper'
 describe 'the container-update command' do
   let(:command_name) { 'container-update' }
 
-  let(:client) do
-    client = Object.new
+  let(:client) { Object.new }
+
+  before do
     allow(Aws::S3::Client).to receive(:new).and_return(client)
-    client
   end
+
 
   it 'updates a container definition' do
     ENV['ECS_CONTAINER_DEF_URL'] = 's3://fakebucket/container-definitions'

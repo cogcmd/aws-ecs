@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'the container-show command' do
   let(:command_name) { 'container-show' }
 
-  let(:client) do
-    client = Object.new
+  let(:client) { Object.new }
+
+  before do
     allow(Aws::S3::Client).to receive(:new).and_return(client)
-    client
   end
 
   it 'shows a container definition' do
