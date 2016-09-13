@@ -1,5 +1,4 @@
 require 'cog_cmd/ecs/helpers'
-require 'pry'
 
 module CogCmd::Ecs::Task
   class List < Cog::Command
