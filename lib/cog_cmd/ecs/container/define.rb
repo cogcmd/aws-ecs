@@ -9,20 +9,35 @@ module CogCmd::Ecs::Container
     include CogCmd::Ecs::Container::Helpers
 
     def run_command
-      unless name = request.args[0]
-        raise Cog::Error, "A container definition name must be specified."
-      end
+      raise(Cog::Error, "A container definition name must be specified.") unless def_name
+      raise(Cog::Error, "A Docker image must be specified.") unless image_name
 
-      unless image = request.args[1]
-        raise Cog::Error, "A Docker image must be specified."
-      end
+      response.template = 'definition_show'
+      response.content = put_container_def
+    end
+
+    private
+
+    def def_name
+      request.args[0]
+    end
+
+    def image_name
+      request.args[1]
+    end
+
+    def container_def
+      return @container_def if @container_def
 
       def_params = {
-        name: name,
-        image: image
+        name: def_name,
+        image: image_name
       }.merge(process_options(request.options))
 
-      container_def = Aws::ECS::Types::ContainerDefinition.new(def_params)
+      @container_def = Aws::ECS::Types::ContainerDefinition.new(def_params)
+    end
+
+    def put_container_def
       client = Aws::S3::Client.new()
 
       bucket = container_definition_root[:bucket]
@@ -30,11 +45,9 @@ module CogCmd::Ecs::Container
       body = JSON.pretty_generate(container_def.to_h)
 
       client.put_object(bucket: bucket, key: key, body: body)
-      resp = client.get_object(bucket: bucket, key: key)
-
-      response.template = 'definition_show'
-      response.content = JSON.parse(resp.body.read)
+      JSON.parse(client.get_object(bucket: bucket, key: key).body.read)
     end
 
   end
+
 end
