@@ -1,19 +1,23 @@
 require 'cog_cmd/ecs/helpers'
+require 'cog_cmd/ecs/service/helpers'
 require 'securerandom'
 
 module CogCmd::Ecs::Service
   class Create < Cog::Command
 
     include CogCmd::Ecs::Helpers
+    include CogCmd::Ecs::Service::Helpers
 
     attr_reader :service_name, :task_definition, :desired_count
     attr_reader :cluster_name, :role
 
     def initialize
+      # args
       @service_name = request.args[0]
       @task_definition = request.args[1]
       @desired_count = request.args[2] || 1
 
+      # options
       @cluster_name = request.options['cluster']
       @deployment_config = request.options['deployment-config']
       @load_balancer = request.options['load-balancer']
@@ -24,6 +28,7 @@ module CogCmd::Ecs::Service
       raise(Cog::Error, "A service name must be specified.") unless service_name
       raise(Cog::Error, "A task definition must be specified.") unless task_definition
 
+      response.template = 'service_show'
       response.content = create_service
     end
 
@@ -43,19 +48,11 @@ module CogCmd::Ecs::Service
       params['load_balancers'] = [load_balancer]             if load_balancer
       params['role'] = role                                  if role
 
-      client.create_service(params).to_h
+      client.create_service(params).service.to_h
     end
 
     def generate_token
       SecureRandom.uuid
-    end
-
-    def deployment_config
-      return unless @deployment_config
-      config = @deployment_config.strip.split(':')
-
-      { minimum_healthy_percent: config[0],
-        maximum_percent: config[1] }
     end
 
     def load_balancer
