@@ -28,7 +28,7 @@ module CogCmd::Ecs::Service
       raise(Cog::Error, "A service name must be specified.") unless service_name
       raise(Cog::Error, "A task definition must be specified.") unless task_definition
 
-      response.template = 'service_show'
+      response.template = 'service_summary'
       response.content = create_service
     end
 

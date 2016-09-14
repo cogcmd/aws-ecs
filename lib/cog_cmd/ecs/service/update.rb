@@ -24,7 +24,7 @@ module CogCmd::Ecs::Service
     def run_command
       raise(Cog::Error, "A service name must be specified.") unless service_name
 
-      response.template = 'service_show'
+      response.template = 'service_summary'
       response.content = update_service
     end
 
