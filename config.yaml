@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.36
+version: 0.0.42
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -306,7 +306,8 @@ commands:
         type: string
         required: false
         short_flag: s
-        description: Filter by the desired status of the task. Can be one of active, inactive.
+        description: Filter by the desired status of the task. Can be one of active,
+          inactive.
       sort:
         type: string
         required: false
@@ -390,9 +391,25 @@ commands:
     arguments: "<family | family:revision>"
     rules:
     - must have ecs:task
+  service-list:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists services running in the specified cluster.
+    long_description: |-
+      Lists services running in the specified cluster.
+      Note: If no cluster is specified, the default cluster is assumed.
+    arguments: "[cluster]"
+    options:
+      limit:
+        type: int
+        required: false
+        short_flag: l
+        description: At max only return this many results.
+    rules:
+    - must have ecs:service
 permissions:
 - ecs:container
 - ecs:task
+- ecs:service
 templates:
   definition_table:
     body: |
@@ -447,4 +464,11 @@ templates:
     body: |
       ~each var=$results as=task~
       ~$task.family~
+      ~end~
+  service_table:
+    body: |
+      | Name | ARN |
+      | ---- | --- |
+      ~each var=$results as=service~
+      | ~$service.name~ | ~$service.arn~ |
       ~end~
