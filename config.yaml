@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.48
+version: 0.0.59
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -427,7 +427,9 @@ commands:
         type: string
         required: false
         short_flag: d
-        description: Optional deployment parameters that control how many tasks run during the deployment and the ordering of stopping and starting tasks. Specified as 'minimum_healthy_percent:maximum_percent'.
+        description: Optional deployment parameters that control how many tasks run
+          during the deployment and the ordering of stopping and starting tasks. Specified
+          as 'minimum_healthy_percent:maximum_percent'.
       load-balancer:
         type: string
         required: false
@@ -440,13 +442,17 @@ commands:
         type: string
         required: false
         short_flag: r
-        description: |-
-          The name or full Amazon Resource Name (ARN) of the IAM role that allows Amazon ECS to make calls to your load balancer on your behalf. This parameter is required if you are using a load balancer with your service. If you specify the role option, you must also specify a load balancer object with the load-balancer option.
+        description: The name or full Amazon Resource Name (ARN) of the IAM role that
+          allows Amazon ECS to make calls to your load balancer on your behalf. This
+          parameter is required if you are using a load balancer with your service.
+          If you specify the role option, you must also specify a load balancer object
+          with the load-balancer option.
     rules:
     - must have ecs:service
   service-update:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
-    description: Modifies the desired count, deployment configuration, or task definition used in a service.
+    description: Modifies the desired count, deployment configuration, or task definition
+      used in a service.
     arguments: "<service_name>"
     options:
       task-definition:
@@ -458,7 +464,8 @@ commands:
         type: int
         required: false
         short_flag: d
-        description: The number of instantiations of the task to place and keep running in your service.
+        description: The number of instantiations of the task to place and keep running
+          in your service.
       cluster:
         type: string
         required: false
@@ -470,7 +477,9 @@ commands:
         type: string
         required: false
         short_flag: d
-        description: Optional deployment parameters that control how many tasks run during the deployment and the ordering of stopping and starting tasks. Specified as 'minimum_healthy_percent:maximum_percent'.
+        description: Optional deployment parameters that control how many tasks run
+          during the deployment and the ordering of stopping and starting tasks. Specified
+          as 'minimum_healthy_percent:maximum_percent'.
       load-balancer:
         type: string
         required: false
@@ -483,8 +492,25 @@ commands:
         type: string
         required: false
         short_flag: r
-        description: |-
-          The name or full Amazon Resource Name (ARN) of the IAM role that allows Amazon ECS to make calls to your load balancer on your behalf. This parameter is required if you are using a load balancer with your service. If you specify the role option, you must also specify a load balancer object with the load-balancer option.
+        description: The name or full Amazon Resource Name (ARN) of the IAM role that
+          allows Amazon ECS to make calls to your load balancer on your behalf. This
+          parameter is required if you are using a load balancer with your service.
+          If you specify the role option, you must also specify a load balancer object
+          with the load-balancer option.
+    rules:
+    - must have ecs:service
+  service-show:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Shows one or more services.
+    arguments: "<service_name ...>"
+    options:
+      cluster:
+        type: string
+        required: false
+        short_flag: c
+        description: The short name or full Amazon Resource Name (ARN) of the cluster
+          on which to run your service. If you do not specify a cluster, the default
+          cluster is assumed.
     rules:
     - must have ecs:service
 permissions:
@@ -552,4 +578,34 @@ templates:
       | ---- | --- |
       ~each var=$results as=service~
       | ~$service.name~ | ~$service.arn~ |
+      ~end~
+  service_show:
+    body: |
+      ~each var=$results as=result~
+      Services:
+      ---------
+      ~br~
+      | Name | Status | Desired Count | Running Count | Pending Count |
+      | ---- | ------ | ------------- | ------------- | ------------- |
+      ~each var=$result.services as=service~
+      | ~$service.service_name~ | ~$service.status~ | ~$service.desired_count~ | ~$service.running_count~ | ~$service.pending_count~ |
+      ~end~
+      ~if cond=$result.failures not_empty?~
+      ~br~
+      **Failures**:
+      ~br~
+      | ARN | Reason |
+      | --- | ------ |
+      ~each var=$result.failures as=failure~
+      | ~$failure.arn~ | ~$failure.reason~ |
+      ~end~
+      ~end~
+      ~end~
+  service_summary:
+    body: |
+      ~each var=$results as=service~
+      **Service**: ~$service.name~
+      **Desired Count**: ~$service.desired_count~
+      ~br~
+      ~json var=$service~
       ~end~
