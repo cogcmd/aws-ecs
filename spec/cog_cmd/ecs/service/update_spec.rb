@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'the service-update command' do
   let(:command_name) { 'service-update' }
 
-  let(:client) { Object.new }
+  let(:client) { double('Aws::Ecs::Client') }
 
   let(:service) do
     Aws::ECS::Types::UpdateServiceResponse.new

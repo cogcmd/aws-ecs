@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'the service-create command' do
   let(:command_name) { 'service-create' }
 
-  let(:client) { Object.new }
+  let(:client) { double('Aws::Ecs::Client') }
 
   let(:service_response) do
     Aws::ECS::Types::CreateServiceResponse.new
