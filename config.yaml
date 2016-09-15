@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.62
+version: 0.0.69
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -586,14 +586,8 @@ templates:
       **Status**: ~$service.status~
       **Desired Count**: ~$service.desired_count~
       **Running Count**: ~$service.running_count~
-      **Pending Count**: ~$service.pending_count~ |
-      ~br~
-      ~end~
-  service_summary:
-    body: |
-      ~each var=$results as=service~
-      **Service**: ~$service.service_name~
-      **Desired Count**: ~$service.desired_count~
-      ~br~
+      **Pending Count**: ~$service.pending_count~
+      ~attachment title="Json Body"~
       ~json var=$service~
+      ~end~
       ~end~

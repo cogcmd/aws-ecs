@@ -3,6 +3,8 @@
 **Status**: ~$service.status~
 **Desired Count**: ~$service.desired_count~
 **Running Count**: ~$service.running_count~
-**Pending Count**: ~$service.pending_count~ |
-~br~
+**Pending Count**: ~$service.pending_count~
+~attachment title="Json Body"~
+~json var=$service~
+~end~
 ~end~
