@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.87
+version: 0.0.114
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -545,7 +545,9 @@ templates:
     body: |
       ~each var=$results as=task~
       ~attachment title=$task.family color="darkblue"~
-      ~join var=$task.revisions~~$item~~end~
+      ~each var=$task.revisions~
+      1. ~$item~
+      ~end~
       ~end~
       ~end~
   task_show:
@@ -569,7 +571,7 @@ templates:
     body: |
       ~attachment title="Families" color="darkblue"~
       ~each var=$results as=task~
-      ~$task.family~
+      • ~$task.family~
       ~end~
       ~end~
   service_table:
