@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.36
+version: 0.0.76
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -306,7 +306,8 @@ commands:
         type: string
         required: false
         short_flag: s
-        description: Filter by the desired status of the task. Can be one of active, inactive.
+        description: Filter by the desired status of the task. Can be one of active,
+          inactive.
       sort:
         type: string
         required: false
@@ -390,9 +391,132 @@ commands:
     arguments: "<family | family:revision>"
     rules:
     - must have ecs:task
+  service-list:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Lists services running in the specified cluster.
+    long_description: |-
+      Lists services running in the specified cluster.
+      Note: If no cluster is specified, the default cluster is assumed.
+    arguments: "[cluster]"
+    options:
+      limit:
+        type: int
+        required: false
+        short_flag: l
+        description: At max only return this many results.
+    rules:
+    - must have ecs:service
+  service-create:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Runs and maintains a desired number of tasks from a specified task
+      definition.
+    long_description: |-
+      Runs and maintains a desired number of tasks from a specified task definition. If the number of tasks running in a service drops below desired_count, Amazon ECS spawns another instantiation of the task in the specified cluster.
+      Note: desired_count defaults to 1
+      In addition to maintaining the desired count of tasks in your service, you can optionally run your service behind a load balancer. The load balancer distributes traffic across the tasks that are associated with the service.
+    arguments: "<service_name> <task_definition> <desired_count>"
+    options:
+      cluster:
+        type: string
+        required: false
+        short_flag: c
+        description: The short name or full Amazon Resource Name (ARN) of the cluster
+          on which to run your service. If you do not specify a cluster, the default
+          cluster is assumed.
+      deployment-config:
+        type: string
+        required: false
+        short_flag: d
+        description: Optional deployment parameters that control how many tasks run
+          during the deployment and the ordering of stopping and starting tasks. Specified
+          as 'minimum_healthy_percent:maximum_percent'.
+      load-balancer:
+        type: string
+        required: false
+        short_flag: l
+        description: |-
+          Specifies a load balancer to user with your service.
+          For Elastic Load Balancing Classic load balancers, this object must contain the container name (as it appears in a container definition), the container port to access from the load balancer, and the load balancer name. Specified as 'container_name:container_port:load_balancer_name'. When a task from this service is placed on a container instance, the container instance is registered with the load balancer specified here.
+          For Elastic Load Balancing Application load balancers, this object must contain the container name (as it appears in a container definition), the container port to access from the load balancer, and the load balancer target group ARN. Specified as 'container_name:container_port:target_group_arn'. When a task from this service is placed on a container instance, the container instance and port combination is registered as a target in the target group specified here.
+      role:
+        type: string
+        required: false
+        short_flag: r
+        description: The name or full Amazon Resource Name (ARN) of the IAM role that
+          allows Amazon ECS to make calls to your load balancer on your behalf. This
+          parameter is required if you are using a load balancer with your service.
+          If you specify the role option, you must also specify a load balancer object
+          with the load-balancer option.
+    rules:
+    - must have ecs:service
+  service-update:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Modifies the desired count, deployment configuration, or task definition
+      used in a service.
+    arguments: "<service_name>"
+    options:
+      task-definition:
+        type: string
+        required: false
+        short_flag: t
+        description: The task definition to run in your service.
+      desired-count:
+        type: int
+        required: false
+        short_flag: d
+        description: The number of instantiations of the task to place and keep running
+          in your service.
+      cluster:
+        type: string
+        required: false
+        short_flag: c
+        description: The short name or full Amazon Resource Name (ARN) of the cluster
+          on which to run your service. If you do not specify a cluster, the default
+          cluster is assumed.
+      deployment-config:
+        type: string
+        required: false
+        short_flag: d
+        description: Optional deployment parameters that control how many tasks run
+          during the deployment and the ordering of stopping and starting tasks. Specified
+          as 'minimum_healthy_percent:maximum_percent'.
+      load-balancer:
+        type: string
+        required: false
+        short_flag: l
+        description: |-
+          Specifies a load balancer to user with your service.
+          For Elastic Load Balancing Classic load balancers, this object must contain the container name (as it appears in a container definition), the container port to access from the load balancer, and the load balancer name. Specified as 'container_name:container_port:load_balancer_name'. When a task from this service is placed on a container instance, the container instance is registered with the load balancer specified here.
+          For Elastic Load Balancing Application load balancers, this object must contain the container name (as it appears in a container definition), the container port to access from the load balancer, and the load balancer target group ARN. Specified as 'container_name:container_port:target_group_arn'. When a task from this service is placed on a container instance, the container instance and port combination is registered as a target in the target group specified here.
+      role:
+        type: string
+        required: false
+        short_flag: r
+        description: The name or full Amazon Resource Name (ARN) of the IAM role that
+          allows Amazon ECS to make calls to your load balancer on your behalf. This
+          parameter is required if you are using a load balancer with your service.
+          If you specify the role option, you must also specify a load balancer object
+          with the load-balancer option.
+    rules:
+    - must have ecs:service
+  service-show:
+    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    description: Shows one or more services.
+    arguments: "<service_name ...>"
+    options:
+      cluster:
+        type: string
+        required: false
+        short_flag: c
+        description: The short name or full Amazon Resource Name (ARN) of the cluster
+          on which to run your service. If you do not specify a cluster, the default
+          cluster is assumed.
+    rules:
+    - must have ecs:service
 permissions:
 - ecs:container
 - ecs:task
+- ecs:service
 templates:
   definition_table:
     body: |
@@ -447,4 +571,26 @@ templates:
     body: |
       ~each var=$results as=task~
       ~$task.family~
+      ~end~
+  service_table:
+    body: |
+      | Name | ARN |
+      | ---- | --- |
+      ~each var=$results as=service~
+      | ~$service.name~ | ~$service.arn~ |
+      ~end~
+  service_show:
+    body: |
+      ~each var=$results as=service~
+      ~attachment title=$service.service_name color="lightblue"~
+      _Status:_ ~$service.status~
+      ~end~
+      ~attachment title="Counts" color="mediumblue"~
+      | Desired | Running | Pending |
+      | ------- | ------- | ------- |
+      | ~$service.desired_count~ | ~$service.running_count~ | ~$service.pending_count~ |
+      ~end~
+      ~attachment title="Json Body" color="darkblue"~
+      ~json var=$service~
+      ~end~
       ~end~
