@@ -21,7 +21,7 @@ module CogCmd::Ecs::Task
       ]
 
 
-      response.template = 'task_table'
+      response.template = 'task_list'
 
       definition_arns = fetch_task_definitions(client, ecs_params)
       response.content = process_definition_arns(definition_arns)

@@ -1,5 +1,5 @@
 ~each var=$results as=task~
-**Family**: ~$task.family~
-**Revisions**: ~join var=$task.revisions~~$item~~end~
-~br~
+~attachment title=$task.family color="darkblue"~
+~join var=$task.revisions~~$item~~end~
+~end~
 ~end~

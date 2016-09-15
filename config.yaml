@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.78
+version: 0.0.87
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -541,39 +541,36 @@ templates:
       ~each var=$results as=definition~
       Deleted ~$definition.name~
       ~end~
-  task_table:
-    body: |
-      ~each var=$results as=task~
-      **Family**: ~$task.family~
-      **Revisions**: ~join var=$task.revisions~~$item~~end~
-      ~br~
-      ~end~
   task_list:
     body: |
       ~each var=$results as=task~
-      **Family**: ~$task.family~
-      **Revisions**: ~join var=$task.revisions~~$item~~end~
-      ~br~
+      ~attachment title=$task.family color="darkblue"~
+      ~join var=$task.revisions~~$item~~end~
+      ~end~
       ~end~
   task_show:
     body: |
       ~each var=$results as=task~
-      **Family**: ~$task.family~
-      **Revision**: ~$task.revision~
-      **status**: ~$task.status~
-      **Task Definition ARN**: ~$task.task_definition_arn~
-      ~if cond=$task.volumes not_empty?~
-      **Volumes**:
-      ~json var=$task.volumes~
-      ~br~
+      ~attachment title=$task.family color="blue"~
+      _Revision:_ ~$task.revision~
+      _Status:_ ~$task.status~
+      _ARN:_ ~$task.task_definition_arn~
       ~end~
-      **Container Definitions**:
+      ~if cond=$task.volumes not_empty?~
+      ~attachment title="Volumes" color="mediumblue"~
+      ~json var=$task.volumes~
+      ~end~
+      ~end~
+      ~attachment title="Container Definitions" color="darkblue"~
       ~json var=$task.container_definitions~
+      ~end~
       ~end~
   task_family_list:
     body: |
+      ~attachment title="Families" color="darkblue"~
       ~each var=$results as=task~
       ~$task.family~
+      ~end~
       ~end~
   service_table:
     body: |
