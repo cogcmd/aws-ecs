@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.59
+version: 0.0.62
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -581,30 +581,18 @@ templates:
       ~end~
   service_show:
     body: |
-      ~each var=$results as=result~
-      Services:
-      ---------
+      ~each var=$results as=service~
+      **Name**: ~$service.service_name~
+      **Status**: ~$service.status~
+      **Desired Count**: ~$service.desired_count~
+      **Running Count**: ~$service.running_count~
+      **Pending Count**: ~$service.pending_count~ |
       ~br~
-      | Name | Status | Desired Count | Running Count | Pending Count |
-      | ---- | ------ | ------------- | ------------- | ------------- |
-      ~each var=$result.services as=service~
-      | ~$service.service_name~ | ~$service.status~ | ~$service.desired_count~ | ~$service.running_count~ | ~$service.pending_count~ |
-      ~end~
-      ~if cond=$result.failures not_empty?~
-      ~br~
-      **Failures**:
-      ~br~
-      | ARN | Reason |
-      | --- | ------ |
-      ~each var=$result.failures as=failure~
-      | ~$failure.arn~ | ~$failure.reason~ |
-      ~end~
-      ~end~
       ~end~
   service_summary:
     body: |
       ~each var=$results as=service~
-      **Service**: ~$service.name~
+      **Service**: ~$service.service_name~
       **Desired Count**: ~$service.desired_count~
       ~br~
       ~json var=$service~
