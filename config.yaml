@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.76
+version: 0.0.78
 commands:
   container-define:
     executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
@@ -520,18 +520,21 @@ permissions:
 templates:
   definition_table:
     body: |
+      ~attachment title="Container Definitions" color="darkblue"~
       | Name | Last Modified |
       | ---- | ------------- |
       ~each var=$results as=definition~| ~$definition.name~ | ~$definition.last_modified~ |
       ~end~
+      ~end~
   definition_show:
     body: |
       ~each var=$results as=definition~
-      Name: ~$definition.name~
-      Image: ~$definition.image~
-
-      Definition body:
+      ~attachment title=$definition.name color="mediumblue"~
+      _Image:_ ~$definition.image~
+      ~end~
+      ~attachment title="Definition Body" color="darkblue"~
       ~json var=$definition~
+      ~end~
       ~end~
   definition_delete:
     body: |

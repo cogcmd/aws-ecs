@@ -1,7 +1,8 @@
 ~each var=$results as=definition~
-Name: ~$definition.name~
-Image: ~$definition.image~
-
-Definition body:
+~attachment title=$definition.name color="mediumblue"~
+_Image:_ ~$definition.image~
+~end~
+~attachment title="Definition Body" color="darkblue"~
 ~json var=$definition~
+~end~
 ~end~
