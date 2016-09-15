@@ -1,13 +1,15 @@
 ~each var=$results as=task~
-**Family**: ~$task.family~
-**Revision**: ~$task.revision~
-**status**: ~$task.status~
-**Task Definition ARN**: ~$task.task_definition_arn~
-~if cond=$task.volumes not_empty?~
-**Volumes**:
-~json var=$task.volumes~
-~br~
+~attachment title=$task.family color="blue"~
+_Revision:_ ~$task.revision~
+_Status:_ ~$task.status~
+_ARN:_ ~$task.task_definition_arn~
 ~end~
-**Container Definitions**:
+~if cond=$task.volumes not_empty?~
+~attachment title="Volumes" color="mediumblue"~
+~json var=$task.volumes~
+~end~
+~end~
+~attachment title="Container Definitions" color="darkblue"~
 ~json var=$task.container_definitions~
+~end~
 ~end~

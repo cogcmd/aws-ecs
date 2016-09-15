@@ -1,3 +1,5 @@
+~attachment title="Families" color="darkblue"~
 ~each var=$results as=task~
-~$task.family~
+• ~$task.family~
+~end~
 ~end~
