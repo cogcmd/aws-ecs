@@ -57,7 +57,6 @@ module CogCmd::Ecs::Service
 
     def load_balancer
       return unless @load_balancer
-      lb = @load_balancer.strip.split(':')
 
       # load balancers are specified one of two ways depending on the type.
       # Elastic load balancing classic is specified with the container name,
@@ -65,19 +64,13 @@ module CogCmd::Ecs::Service
       # Elastic load balancing application load balancers are specified with
       # the container name, container port and the load balancer target group
       # arn; 'container:port:arn'. Since arns contain colons, ':', when we
-      # split and the length is 3 then we should be dealing with a classic
-      # load balancer and we set values accordingly. If the length is greater
-      # than three we assume it's an application load balancer and join the last
-      # elements to reform the target group arn.
-      if lb.length == 3
-        { container_name: lb[0],
-          container_port: lb[1],
-          load_balancer_name: lb[2] }
-      else
-        { container_name: lb.shift,
-          container_port: lb.shift,
-          target_group_arn: lb.join(':') }
-      end
+      # split if the last element contains a colon it's the arn and not the name.
+      name, port, name_or_arn = @load_balancer.strip.split(':', 3)
+      name_or_arn_key = name_or_arn.include?(':') ? :target_group_arn : :load_balancer_name
+
+      { :container_name => name,
+        :container_port => port,
+        name_or_arn_key => name_or_arn }
     end
 
   end
