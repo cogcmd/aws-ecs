@@ -8,6 +8,8 @@ module CogCmd::Ecs::Service
     include CogCmd::Ecs::Helpers
     include CogCmd::Ecs::Service::Helpers
 
+    DEFAULT_DESIRED_COUNT = 1
+
     attr_reader :service_name, :task_definition, :desired_count
     attr_reader :cluster_name, :role
 
@@ -15,7 +17,7 @@ module CogCmd::Ecs::Service
       # args
       @service_name = request.args[0]
       @task_definition = request.args[1]
-      @desired_count = request.args[2] || 1
+      @desired_count = request.args[2] || DEFAULT_DESIRED_COUNT
 
       # options
       @cluster_name = request.options['cluster']
