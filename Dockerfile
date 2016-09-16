@@ -13,7 +13,7 @@ COPY Gemfile Gemfile.lock /home/bundle/
 
 # Install Git, run Bundler, and uninstall Git to recover space
 RUN apk add git && \
-    su bundle -c 'bundle install --path .bundle' && \
+    su bundle -c 'bundle install --without development test --path .bundle' && \
     apk del git && \
     rm -f /var/cache/apk/*
 
