@@ -504,8 +504,8 @@ commands:
     - must have ecs:service
   service-show:
     executable: "/home/bundle/cog-command"
-    description: Shows one or more services.
-    arguments: "<service_name ...>"
+    description: Shows a service.
+    arguments: "<service_name>"
     options:
       cluster:
         type: string
