@@ -2,10 +2,13 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.114
+version: 0.0.1
+docker:
+  image: cogcmd/aws-ecs
+  tag: "0.0.1"
 commands:
   container-define:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Creates a new container definition.
     arguments: "<name> <image>"
     options:
@@ -136,7 +139,7 @@ commands:
     rules:
     - must have ecs:container
   container-update:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Updates container definitions.
     arguments: "<name>"
     options:
@@ -272,24 +275,24 @@ commands:
     rules:
     - must have ecs:container
   container-list:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Lists container definitions.
     rules:
     - must have ecs:container
   container-show:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Shows json body of a container definition.
     arguments: "<name>"
     rules:
     - must have ecs:container
   container-delete:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Deletes container definitions.
     arguments: "<name>"
     rules:
     - must have ecs:container
   task-list:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Lists registered tasks.
     options:
       family:
@@ -316,7 +319,7 @@ commands:
     rules:
     - must have ecs:task
   task-register:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Registers a new task.
     long_description: |-
       Registers a new task.
@@ -359,13 +362,13 @@ commands:
     rules:
     - must have ecs:task
   task-deregister:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Deregisters tasks.
     arguments: "<family:revision>"
     rules:
     - must have ecs:task
   task-families:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Lists task definition families.
     options:
       family-prefix:
@@ -383,7 +386,7 @@ commands:
     rules:
     - must have ecs:task
   task-show:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Shows the task definition.
     long_description: |-
       Shows the task definition.
@@ -392,7 +395,7 @@ commands:
     rules:
     - must have ecs:task
   service-list:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Lists services running in the specified cluster.
     long_description: |-
       Lists services running in the specified cluster.
@@ -407,7 +410,7 @@ commands:
     rules:
     - must have ecs:service
   service-create:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Runs and maintains a desired number of tasks from a specified task
       definition.
     long_description: |-
@@ -450,7 +453,7 @@ commands:
     rules:
     - must have ecs:service
   service-update:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
+    executable: "/home/bundle/cog-command"
     description: Modifies the desired count, deployment configuration, or task definition
       used in a service.
     arguments: "<service_name>"
@@ -500,9 +503,9 @@ commands:
     rules:
     - must have ecs:service
   service-show:
-    executable: "/Users/mpeck/op/cogcmds/aws-ecs/cog-command"
-    description: Shows one or more services.
-    arguments: "<service_name ...>"
+    executable: "/home/bundle/cog-command"
+    description: Shows a service.
+    arguments: "<service_name>"
     options:
       cluster:
         type: string
