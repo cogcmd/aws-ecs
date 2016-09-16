@@ -5,7 +5,7 @@ description: AWS EC2 Container Service
 version: 0.0.1
 docker:
   image: cogcmd/aws-ecs
-  tag: "0.0.1"
+  tag: 0.0.1
 commands:
   container-define:
     executable: "/home/bundle/cog-command"
@@ -407,6 +407,23 @@ commands:
         required: false
         short_flag: l
         description: At max only return this many results.
+    rules:
+    - must have ecs:service
+  service-delete:
+    executable: "/home/bundle/cog-command"
+    description: Deletes the specified service within a cluster.
+    long_description: |-
+      Deletes the specified service within a cluster.
+      Note: The service must have desired count and running count of 0 before you can delete it.
+    arguments: "<service_name>"
+    options:
+      cluster:
+        type: string
+        required: false
+        short_flag: c
+        description: The short name or full Amazon Resource Name (ARN) of the cluster
+          on which to your service is running. If you do not specify a cluster, the
+          default cluster is assumed.
     rules:
     - must have ecs:service
   service-create:
