@@ -3,47 +3,59 @@ require 'spec_helper'
 describe 'the task-list command' do
   let(:command_name) { 'task-list' }
 
-  let(:client) do
-    client = Object.new
-    allow(Aws::ECS::Client).to receive(:new).and_return(client)
-    client
+  let(:client) { double('Aws::ECS::Client') }
+
+  let(:families) do
+    Aws::ECS::Types::ListTaskDefinitionFamiliesResponse.new(
+      families: [ 'myfamily',
+                  'herfamily',
+                  'hisfamily',
+                  'theirfamily' ])
   end
 
-  it 'returns a list of tasks and their revisions' do
-    task_definitions =
-      Aws::ECS::Types::ListTaskDefinitionsResponse.new(
-        { task_definition_arns: [
-          "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/family1:1",
-          "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/family1:2",
-          "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/family2:1",
-          "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/family2:2",
-          "arn:aws:ecs:us-east-1:<aws_account_id>:task-definition/family3:2"] })
+  let(:revisions) do
+    Aws::ECS::Types::ListTaskDefinitionsResponse.new(
+      task_definition_arns: [ 'arn:aws:ecs:us-east-1:000000000000:task-definition/myfamily:1',
+                              'arn:aws:ecs:us-east-1:000000000000:task-definition/myfamily:2',
+                              'arn:aws:ecs:us-east-1:000000000000:task-definition/myfamily:3',
+                              'arn:aws:ecs:us-east-1:000000000000:task-definition/myfamily:4',
+                              'arn:aws:ecs:us-east-1:000000000000:task-definition/myfamily:5' ])
+  end
 
-    expect(client).to receive(:list_task_definitions).and_return(task_definitions)
+  before do
+    allow(client).to receive(:new).and_return(client)
+  end
+
+  it 'returns a list of task definition families when no args are passed' do
+    expect(client).to receive(:list_task_definition_families).and_return(families)
 
     run_command
-    expect(command).to respond_with(
-      [{
-        family: 'family1',
-        revisions: [
-          'family1:1',
-          'family1:2']
-      }, {
-        family: 'family2',
-        revisions: [
-          'family2:1',
-          'family2:2']
-      }, {
-        family: 'family3',
-        revisions: [
-          'family3:2']
-      }])
+
+    expect(command).to respond_with([{ task_definition: 'myfamily',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'herfamily',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'hisfamily',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'theirfamily',
+                                       status: 'ACTIVE' }])
   end
 
-  it 'sends a family-prefix when the family option is specified' do
-    expect(client).to receive(:list_task_definitions).with({family_prefix: 'myfamily'}).and_return(Aws::ECS::Types::ListTaskDefinitionsResponse.new)
+  it 'returns a list of task definition revisions when a task def is passed' do
+    expect(client).to receive(:list_task_definitions).and_return(revisions)
 
-    run_command(options: { family: 'myfamily' })
+    run_command(args: ['myfamily'])
+
+    expect(command).to respond_with([{ task_definition: 'myfamily:1',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'myfamily:2',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'myfamily:3',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'myfamily:4',
+                                       status: 'ACTIVE' },
+                                     { task_definition: 'myfamily:5',
+                                       status: 'ACTIVE' }])
   end
 
 end
