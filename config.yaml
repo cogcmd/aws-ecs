@@ -293,34 +293,32 @@ commands:
     - must have ecs:container
   task-list:
     executable: "/home/bundle/cog-command"
-    description: Lists registered tasks.
+    description: Lists task definition families and revisions.
+    long_description: Lists task definition families and revisions. Pass a task definition
+      to list it's revisions.
+    arguments: "[task_definition]"
     options:
-      family:
+      family-prefix:
         type: string
         required: false
         short_flag: f
-        description: The name of the family with which to filter the results.
+        description: Filter by family prefix. Doesn't apply when listing revisions.
       limit:
         type: int
         required: false
         short_flag: l
-        description: Limit the number of results returned.
-      status:
-        type: string
+        description: Limit results.
+      inactive:
+        type: bool
         required: false
-        short_flag: s
-        description: Filter by the desired status of the task. Can be one of active,
-          inactive.
-      sort:
-        type: string
-        required: false
-        short_flag: o
-        description: The order to sort results in. Can be one of acs, desc.
+        short_flag: i
+        description: Return inactive task definitions. By default active task definitions
+          are returned.
     rules:
     - must have ecs:task
   task-register:
     executable: "/home/bundle/cog-command"
-    description: Registers a new task.
+    description: Registers a new task definition.
     long_description: |-
       Registers a new task.
       Note: Definitions are container definition names as listed by ecs:container list.
@@ -363,26 +361,8 @@ commands:
     - must have ecs:task
   task-deregister:
     executable: "/home/bundle/cog-command"
-    description: Deregisters tasks.
+    description: Deregisters a task definition.
     arguments: "<family:revision>"
-    rules:
-    - must have ecs:task
-  task-families:
-    executable: "/home/bundle/cog-command"
-    description: Lists task definition families.
-    options:
-      family-prefix:
-        type: string
-        required: false
-        short_flag: f
-      limit:
-        type: int
-        required: false
-        short_flag: i
-      status:
-        type: string
-        required: false
-        short_flag: s
     rules:
     - must have ecs:task
   task-show:
@@ -563,12 +543,10 @@ templates:
       ~end~
   task_list:
     body: |
+      | Task Definition | Status |
+      |-----------------|--------|
       ~each var=$results as=task~
-      ~attachment title=$task.family color="darkblue"~
-      ~each var=$task.revisions~
-      1. ~$item~
-      ~end~
-      ~end~
+      | ~$task.task_definition~ | ~$task.status~ |
       ~end~
   task_show:
     body: |
@@ -585,13 +563,6 @@ templates:
       ~end~
       ~attachment title="Container Definitions" color="darkblue"~
       ~json var=$task.container_definitions~
-      ~end~
-      ~end~
-  task_family_list:
-    body: |
-      ~attachment title="Families" color="darkblue"~
-      ~each var=$results as=task~
-      • ~$task.family~
       ~end~
       ~end~
   service_table:

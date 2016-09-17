@@ -1,7 +1,5 @@
+| Task Definition | Status |
+|-----------------|--------|
 ~each var=$results as=task~
-~attachment title=$task.family color="darkblue"~
-~each var=$task.revisions~
-1. ~$item~
-~end~
-~end~
+| ~$task.task_definition~ | ~$task.status~ |
 ~end~

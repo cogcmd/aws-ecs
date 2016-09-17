@@ -5,51 +5,57 @@ module CogCmd::Ecs::Task
 
     include CogCmd::Ecs::Helpers
 
+    attr_reader :family_prefix, :max_results, :status
+    attr_reader :task_definition
+
+    def initialize
+      # args
+      @task_definition = request.args[0]
+
+      # options
+      @family_prefix = request.options['family-prefix']
+      @max_results = request.options['limit']
+      @status = request.options['inactive'] ? 'INACTIVE' : 'ACTIVE'
+    end
+
     def run_command
-      client = Aws::ECS::Client.new()
-
-      ecs_params = Hash[
-        [
-          # list_task_definition only takes the full family name to filter on instead
-          # of the family_prefix. But it still refers to it as the family_prefix.
-          # To hopefully prevent some confusion we renamed it family in the options.
-          param_or_nil([ :family_prefix, request.options['family'] ]),
-          param_or_nil([ :max_results, request.options['limit'] ]),
-          param_or_nil([ :status, request.options['status'] ]),
-          param_or_nil([ :sort, request.options['sort'] ])
-        ].compact
-      ]
-
-
       response.template = 'task_list'
-
-      definition_arns = fetch_task_definitions(client, ecs_params)
-      response.content = process_definition_arns(definition_arns)
+      response.content = list_definitions
     end
 
     private
 
-    def fetch_task_definitions(client, params, next_token = nil, defs = [])
-      return defs if next_token == :end
+    def list_definitions
+      client = Aws::ECS::Client.new()
 
-      params['next_token'] = next_token if next_token
+      params = {
+        family_prefix: task_definition || family_prefix,
+        max_results: max_results,
+        status: status,
+      }.reject { |_key, value| value.nil? }
 
-      resp = client.list_task_definitions(params)
-      next_token = resp.next_token || :end
-      definitions = defs.push(resp.task_definition_arns).flatten
-      fetch_task_definitions(client, params, next_token, definitions)
+      # If the user doesn't pass a task definition name we list task definition
+      # families. If they do we list task definition revisions.
+      if task_definition.nil?
+        list_task_definition_families(client, params)
+      else
+        list_task_definitions(client, params)
+      end
     end
 
-    def process_definition_arns(arns)
-      return [] unless arns.compact.length > 0
+    def list_task_definition_families(client, params)
+      client.list_task_definition_families(params).families.map do |family|
+        { task_definition: family,
+          status: status }
+      end
+    end
 
-      arns.reduce(Hash.new) do |acc, arn|
-        family_revision = arn.split('/')[1]
-        family = family_revision.split(':')[0]
-        acc[family] = acc[family] || {family: family, revisions: []}
-        acc[family][:revisions].push(family_revision)
-        acc
-      end.values
+    def list_task_definitions(client, params)
+      client.list_task_definitions(params).task_definition_arns.map do |arn|
+        _, task_def = arn.split(/:task-definition\//)
+        { task_definition: task_def,
+          status: status }
+      end
     end
 
   end
