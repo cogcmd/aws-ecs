@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.2
+version: 0.0.3
 docker:
   image: cogcmd/aws-ecs
   tag: 0.0.1
@@ -291,17 +291,11 @@ commands:
     arguments: "<name>"
     rules:
     - must have ecs:container
-  task-list:
+  task-families:
     executable: "/home/bundle/cog-command"
-    description: Lists task definition families and revisions.
-    long_description: Pass a task definition family name to list that families revisions.
-    arguments: "[task_definition]"
+    description: Lists task definition families optionally filtered by a family prefix.
+    arguments: "[family_prefix]"
     options:
-      family-prefix:
-        type: string
-        required: false
-        short_flag: f
-        description: Filter by family prefix. Doesn't apply when listing revisions.
       limit:
         type: int
         required: false
@@ -311,14 +305,33 @@ commands:
         type: bool
         required: false
         short_flag: i
-        description: Return inactive task definitions. By default active task definitions
-          are returned.
+        description: Return inactive task definition families. By default active task
+          definition families are returned.
+    rules:
+    - must have ecs:task
+  task-revisions:
+    executable: "/home/bundle/cog-command"
+    description: Lists task definition revisions.
+    arguments: "<family_name>"
+    options:
+      limit:
+        type: int
+        required: false
+        short_flag: l
+        description: Limit results.
+      inactive:
+        type: bool
+        required: false
+        short_flag: i
+        description: Return inactive task definition revisions. By default active
+          task definition revisions are returned.
     rules:
     - must have ecs:task
   task-register:
     executable: "/home/bundle/cog-command"
     description: Registers a new task definition.
-    long_description: "Note: Definitions are container definition names as listed by ecs:container list."
+    long_description: 'Note: Definitions are container definition names as listed
+      by ecs:container list.'
     arguments: "<family> <def1 | def2 | ...>"
     options:
       role:
@@ -365,7 +378,9 @@ commands:
   task-show:
     executable: "/home/bundle/cog-command"
     description: Shows the task definition.
-    long_description: "Note: You can supply the family and revision or just the family. If you supply just the family the latest active revision in the family will be assumed."
+    long_description: 'Note: You can supply the family and revision or just the family.
+      If you supply just the family the latest active revision in the family will
+      be assumed.'
     arguments: "<family | family:revision>"
     rules:
     - must have ecs:task
