@@ -1,5 +1,5 @@
-~attachment title="Families" color="darkblue"~
+| Task Definition Family | Status |
+|------------------------|--------|
 ~each var=$results as=task~
-• ~$task.family~
-~end~
+| ~$task.task_definition_family~ | ~$task.status~ |
 ~end~

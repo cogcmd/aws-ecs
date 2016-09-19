@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'the service-list command' do
   let(:command_name) { 'service-list' }
 
-  let(:client) { double('Aws::Ecs::Client') }
+  let(:client) { double('Aws::ECS::Client') }
 
   let(:service_arns) do
     Aws::ECS::Types::ListServicesResponse.new(

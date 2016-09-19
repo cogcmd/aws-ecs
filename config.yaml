@@ -271,7 +271,7 @@ commands:
         required: false
         description: |-
           The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
-          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
+          Note: log_driver can be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-list:
@@ -291,39 +291,47 @@ commands:
     arguments: "<name>"
     rules:
     - must have ecs:container
-  task-list:
+  task-families:
     executable: "/home/bundle/cog-command"
-    description: Lists registered tasks.
+    description: Lists task definition families optionally filtered by a family prefix.
+    arguments: "[family_prefix]"
     options:
-      family:
-        type: string
-        required: false
-        short_flag: f
-        description: The name of the family with which to filter the results.
       limit:
         type: int
         required: false
         short_flag: l
-        description: Limit the number of results returned.
-      status:
-        type: string
+        description: Limit results.
+      inactive:
+        type: bool
         required: false
-        short_flag: s
-        description: Filter by the desired status of the task. Can be one of active,
-          inactive.
-      sort:
-        type: string
+        short_flag: i
+        description: Return inactive task definition families. By default active task
+          definition families are returned.
+    rules:
+    - must have ecs:task
+  task-revisions:
+    executable: "/home/bundle/cog-command"
+    description: Lists task definition revisions.
+    arguments: "<family_name>"
+    options:
+      limit:
+        type: int
         required: false
-        short_flag: o
-        description: The order to sort results in. Can be one of acs, desc.
+        short_flag: l
+        description: Limit results.
+      inactive:
+        type: bool
+        required: false
+        short_flag: i
+        description: Return inactive task definition revisions. By default active
+          task definition revisions are returned.
     rules:
     - must have ecs:task
   task-register:
     executable: "/home/bundle/cog-command"
-    description: Registers a new task.
-    long_description: |-
-      Registers a new task.
-      Note: Definitions are container definition names as listed by ecs:container list.
+    description: Registers a new task definition.
+    long_description: 'Note: Definitions are container definition names as listed
+      by ecs:container list.'
     arguments: "<family> <def1 | def2 | ...>"
     options:
       role:
@@ -363,34 +371,16 @@ commands:
     - must have ecs:task
   task-deregister:
     executable: "/home/bundle/cog-command"
-    description: Deregisters tasks.
+    description: Deregisters a task definition.
     arguments: "<family:revision>"
-    rules:
-    - must have ecs:task
-  task-families:
-    executable: "/home/bundle/cog-command"
-    description: Lists task definition families.
-    options:
-      family-prefix:
-        type: string
-        required: false
-        short_flag: f
-      limit:
-        type: int
-        required: false
-        short_flag: i
-      status:
-        type: string
-        required: false
-        short_flag: s
     rules:
     - must have ecs:task
   task-show:
     executable: "/home/bundle/cog-command"
     description: Shows the task definition.
-    long_description: |-
-      Shows the task definition.
-      Note: You can supply the family and revision or just the family. If you supply just the family the latest active revision in the family will be assumed.
+    long_description: 'Note: You can supply the family and revision or just the family.
+      If you supply just the family the latest active revision in the family will
+      be assumed.'
     arguments: "<family | family:revision>"
     rules:
     - must have ecs:task
@@ -561,15 +551,6 @@ templates:
       ~each var=$results as=definition~
       Deleted ~$definition.name~
       ~end~
-  task_list:
-    body: |
-      ~each var=$results as=task~
-      ~attachment title=$task.family color="darkblue"~
-      ~each var=$task.revisions~
-      1. ~$item~
-      ~end~
-      ~end~
-      ~end~
   task_show:
     body: |
       ~each var=$results as=task~
@@ -585,13 +566,6 @@ templates:
       ~end~
       ~attachment title="Container Definitions" color="darkblue"~
       ~json var=$task.container_definitions~
-      ~end~
-      ~end~
-  task_family_list:
-    body: |
-      ~attachment title="Families" color="darkblue"~
-      ~each var=$results as=task~
-      • ~$task.family~
       ~end~
       ~end~
   service_table:
@@ -616,3 +590,18 @@ templates:
       ~json var=$service~
       ~end~
       ~end~
+  task_family_list:
+    body: |
+      | Task Definition Family | Status |
+      |------------------------|--------|
+      ~each var=$results as=task~
+      | ~$task.task_definition_family~ | ~$task.status~ |
+      ~end~
+  task_revision_list:
+    body: |+
+      | Task Definition Revision | Status |
+      |--------------------------|--------|
+      ~each var=$results as=task~
+      | ~$task.task_definition_revision~ | ~$task.status~ |
+      ~end~
+

@@ -1,16 +1,16 @@
 require 'cog_cmd/ecs/helpers'
 
 module CogCmd::Ecs::Task
-  class Families < Cog::Command
+  class Revisions < Cog::Command
 
     include CogCmd::Ecs::Helpers
 
     attr_reader :max_results, :status
-    attr_reader :family_prefix
+    attr_reader :family_name
 
     def initialize
       # args
-      @family_prefix = request.args[0]
+      @family_name = request.args[0]
 
       # options
       @max_results = request.options['limit']
@@ -18,7 +18,9 @@ module CogCmd::Ecs::Task
     end
 
     def run_command
-      response.template = 'task_family_list'
+      raise(Cog::Error, "You must specify a task family name.") unless family_name
+
+      response.template = 'task_revision_list'
       response.content = list_definitions
     end
 
@@ -28,13 +30,14 @@ module CogCmd::Ecs::Task
       client = Aws::ECS::Client.new()
 
       params = {
-        family_prefix: family_prefix,
+        family_prefix: family_name,
         max_results: max_results,
         status: status,
       }.reject { |_key, value| value.nil? }
 
-      client.list_task_definition_families(params).families.map do |family|
-        { task_definition_family: family,
+      client.list_task_definitions(params).task_definition_arns.map do |arn|
+        _, task_def = arn.split(/:task-definition\//)
+        { task_definition_revision: task_def,
           status: status }
       end
     end
