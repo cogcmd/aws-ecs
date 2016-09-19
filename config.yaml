@@ -2,7 +2,7 @@
 cog_bundle_version: 4
 name: ecs
 description: AWS EC2 Container Service
-version: 0.0.3
+version: 0.0.1
 docker:
   image: cogcmd/aws-ecs
   tag: 0.0.1
@@ -271,7 +271,7 @@ commands:
         required: false
         description: |-
           The log configuration specification for the container. Specified as 'log_driver:key1=value1:key2=value2:...'.
-          Note: log_driver and be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
+          Note: log_driver can be one of [json-file, syslog, journald, gelf, fluentd, awslogs, splunk]
     rules:
     - must have ecs:container
   container-list:
