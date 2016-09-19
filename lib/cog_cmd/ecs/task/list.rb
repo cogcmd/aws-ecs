@@ -45,7 +45,7 @@ module CogCmd::Ecs::Task
 
     def list_task_definition_families(client, params)
       client.list_task_definition_families(params).families.map do |family|
-        { task_definition: family,
+        { task_definition_family: family,
           status: status }
       end
     end
@@ -53,7 +53,7 @@ module CogCmd::Ecs::Task
     def list_task_definitions(client, params)
       client.list_task_definitions(params).task_definition_arns.map do |arn|
         _, task_def = arn.split(/:task-definition\//)
-        { task_definition: task_def,
+        { task_definition_revision: task_def,
           status: status }
       end
     end
